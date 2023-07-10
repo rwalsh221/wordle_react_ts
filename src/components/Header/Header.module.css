@@ -1,0 +1,9 @@
+header {
+  border-bottom: var(--border-grey);
+  text-align: center;
+  padding: 1rem 0;
+}
+
+header h1 {
+  text-transform: capitalize;
+}

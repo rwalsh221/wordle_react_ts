@@ -1,0 +1,5 @@
+.gamesquare {
+  font-size: 3rem;
+  border: var(--border-grey);
+  padding: 1rem;
+}
