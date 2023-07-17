@@ -1,3 +1,4 @@
 :root {
   --border-grey: 2px solid hsl(0, 0%, 75%);
+  --game-square-size: 6rem;
 }

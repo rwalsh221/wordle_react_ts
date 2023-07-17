@@ -1,5 +1,12 @@
 .gamesquare {
-  font-size: 3rem;
+  user-select: none;
+  /* pointer-events: none; */
+  font-size: 2.5rem;
   border: var(--border-grey);
-  padding: 1rem 2rem;
+  /* padding: 1rem; */
+  width: var(--game-square-size);
+  height: var(--game-square-size);
+  text-align: center;
+  /* vertical-align: text-bottom; */
+  line-height: var(--game-square-size);
 }
