@@ -5,18 +5,32 @@ import Keyboard from '../Keyboard/Keyboard';
 // import json from '../../json/words.json';
 
 type userInputType = {
+  input: string;
+  inWinningWord: boolean | null;
+  inCorrectPlace: boolean | null;
+};
+
+type gameStateType = {
   [key: string]: {
     active: boolean;
-    input: string[];
+    input: userInputType[];
     inWinningWord: string[];
     inCorrectPlace: string[];
   };
+};
+
+type rowType = {
+  active: boolean;
+  input: string[];
+  inWinningWord: string[];
+  inCorrectPlace: string[];
 };
 
 const Main = () => {
   console.log('RENDER');
   // GET FROM JSON FILE
   const [winningWord, setWinningWord] = useState('');
+
   useEffect(() => {
     console.log('useffect');
     // VOID STATEMENT TO IGNORE NO_FLOATING_PROMISES ESLINT FOR BELOW ASYNC FUNCTION
@@ -50,7 +64,7 @@ const Main = () => {
 
   // 4, user inWinninngWord and inCorrectPlace to style keyboard or seperate to prevent additonal loop throgh all keys
 
-  const [userInput, setUserInput] = useState<userInputType>({
+  const [gameState, setGameState] = useState<gameStateType>({
     row1: { active: true, input: [], inWinningWord: [], inCorrectPlace: [] },
     row2: { active: false, input: [], inWinningWord: [], inCorrectPlace: [] },
     row3: { active: false, input: [], inWinningWord: [], inCorrectPlace: [] },
@@ -69,47 +83,164 @@ const Main = () => {
   // TODO: ADD KEY CODE TO PREVENTER ENTER CTRL ETC SHOWING ON BOARD
   // TODO: ADD POPUP WITH BASIC GAME RULES
 
-  const [userInput2, setUserInput2] = useState<string[][]>([]);
+  // const [userInput2, setUserInput2] = useState<string[][]>([]);
+
+  const checkWordHandler = (row: rowType) =>
+    //   winningWord: string,
+    //   guessedWord: string[],
+    //   row: rowType
+    // ) => {
+    //   const winningWordArr = winningWord.split('');
+
+    //   for (let i = 0; i < guessedWord.length; i++) {
+    //     if (winningWordArr[i] === guessedWord[i]) {
+    //       row.inCorrectPlace.push(guessedWord[i]);
+    //     }
+    //     if (winningWord.indexOf(guessedWord[i]) !== -1) {
+    //       row.inWinningWord.push(guessedWord[i]);
+    //     }
+    //   }
+    //   console.log(row);
+    {
+      console.log('hello');
+      console.log(row);
+      const winningWordArr = winningWord.split('');
+      const gameStateInputCopy = [...row.input];
+      // NEEDED FOR DEEP COPY OF STATE INPUT ????? not sure
+      // row.input.forEach((el) => {
+      //   console.log(el);
+      //   gameStateInputCopy.push(structuredClone(el));
+      // });
+      console.log(gameStateInputCopy);
+      const inWinnigWordTest = [];
+      const inCorrectPlaceTest = [];
+
+      for (let i = winningWordArr.length - 1; i >= 0; i--) {
+        console.log(winningWordArr[i]);
+        if (winningWordArr[i] === gameStateInputCopy[i].input) {
+          console.log(true, winningWordArr[i], gameStateInputCopy[i]);
+          inCorrectPlaceTest.push(winningWordArr.splice(i, 1));
+          gameStateInputCopy[i].inWinningWord = false;
+          gameStateInputCopy[i].inCorrectPlace = true;
+          gameStateInputCopy.splice(i, 1);
+        } else {
+          console.log(false, winningWordArr[i], gameStateInputCopy[i]);
+          gameStateInputCopy[i].inCorrectPlace = false;
+        }
+      }
+      console.log('betwtte', gameStateInputCopy);
+
+      //
+      gameStateInputCopy.forEach((el, index) => {
+        console.log('this is EL EL EL', el);
+        if (winningWordArr.indexOf(el.input) !== -1) {
+          el.inWinningWord = true;
+          winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
+          // gameStateInputCopy.splice(index, 1);
+
+          inWinnigWordTest.push(winningWordArr.pop());
+        } else {
+          el.inWinningWord = false;
+        }
+      });
+      //
+
+      // while (gameStateInputCopy.length) {
+      //   console.log('while //////////////////////////////////////////////');
+      //   console.log(winningWordArr);
+      //   console.log(winningWordArr[winningWordArr.length - 1]);
+      //   console.log(gameStateInputCopy[winningWordArr.length - 1].input);
+      //   console.log(
+      //     winningWordArr.indexOf(
+      //       gameStateInputCopy[winningWordArr.length - 1].input
+      //     )
+      //   );
+      //   console.log('while //////////////////////////////////////////////');
+
+      //   if (
+      //     winningWordArr.indexOf(
+      //       gameStateInputCopy[winningWordArr.length - 1].input
+      //     ) !== -1
+      //   ) {
+      //     console.log(
+      //       'true inword',
+      //       gameStateInputCopy[winningWordArr.length - 1]
+      //     );
+      //     gameStateInputCopy[winningWordArr.length - 1].inWinningWord = true;
+      //     gameStateInputCopy.splice(
+      //       gameStateInputCopy.indexOf(
+      //         winningWordArr[winningWordArr.length - 1],
+      //         1
+      //       )
+      //     );
+
+      //     inWinnigWordTest.push(winningWordArr.pop());
+      //   } else {
+      //     console.log('12212', gameStateInputCopy[winningWordArr.length - 1]);
+      //     gameStateInputCopy[winningWordArr.length - 1].inWinningWord = false;
+      //     winningWordArr.pop();
+      //   }
+      // }
+      console.log(inWinnigWordTest);
+      console.log(inCorrectPlaceTest);
+    };
 
   const userInputHandler = (event: React.KeyboardEvent) => {
-    const userInputCopy = { ...userInput };
-    const keyPressed = event.key;
-    const userInputKeys = Object.keys(userInput);
-    console.log(userInputKeys);
-    console.log(keyPressed);
-    console.log(userInput);
+    const gameStateCopy = { ...gameState };
+    let keyPressed: string | null = event.key;
+    const userInputKeys = Object.keys(gameState);
 
     if (!gameRunning) {
       return;
     }
-
+    // NEED TO CHNAGE TO FOR LOOP SO CAN USE BREAK AFTER 'ENTER'
     userInputKeys.forEach((key, index) => {
-      if (!userInputCopy[key].active) {
+      if (keyPressed === null) {
         return;
       }
+      if (!gameStateCopy[key].active) {
+        return;
+      }
+      // SET NEXT ROW ACTIVE && KEY === 'ENTER'
       if (
-        userInputCopy[key].input.length === 5 &&
+        gameStateCopy[key].input.length === 5 &&
         index !== userInputKeys.length - 1
       ) {
-        userInputCopy[key].active = false;
-        userInputCopy[userInputKeys[index + 1]].active = true;
+        if (keyPressed === 'Enter') {
+          checkWordHandler(
+            // winningWord,
+            // gameStateCopy[key].input,
+            gameStateCopy[key]
+          );
+          gameStateCopy[key].active = false;
+          gameStateCopy[userInputKeys[index + 1]].active = true;
+          keyPressed = null;
+        }
+        console.log(gameState);
+        console.log('enter return');
         return;
       }
+      // DELETE KEY
+      if (keyPressed === 'Backspace') {
+        gameStateCopy[key].input.pop();
+        return;
+      }
+      // GAME END
       if (
-        userInputCopy[key].input.length === 5 &&
+        gameStateCopy[key].input.length === 5 &&
         index === userInputKeys.length - 1
       ) {
         setGameRunning(false);
         return;
       }
-      if (keyPressed === 'Backspace') {
-        userInputCopy[key].input.pop();
-        return;
-      }
-      userInputCopy[key].input.push(keyPressed);
+      console.log('no return');
+      gameStateCopy[key].input.push({
+        input: keyPressed,
+        inWinningWord: null,
+        inCorrectPlace: null,
+      });
     });
-
-    setUserInput({ ...userInputCopy });
+    setGameState({ ...gameStateCopy });
   };
 
   /*
@@ -124,7 +255,7 @@ const Main = () => {
     if (gameRunning === false) {
       return;
     }
-    const userInputCopy = [...userInput2];
+    const gameStateCopy = [...userInput2];
     if (userInputCopy.length > 6) {
       return;
     }
@@ -175,8 +306,6 @@ const Main = () => {
 
   */
 
-  const checkWordHandler = (letterArray: string[], winningWord: string) => {};
-
   // SET FALSE ON FAIL OR SUCCESS
   const [gameRunning, setGameRunning] = useState(true);
   return (
@@ -188,7 +317,7 @@ const Main = () => {
       }}
     >
       <p>{gameRunning ? 'game is running' : 'game is not running'}</p>
-      <GameBoard userInputProps={userInput} />
+      <GameBoard userInputProps={gameState} winningWordProps={winningWord} />
       {/* <Keyboard setUserInput={setUserInput} /> */}
     </main>
   );

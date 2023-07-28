@@ -10,3 +10,19 @@
   /* vertical-align: text-bottom; */
   line-height: var(--game-square-size);
 }
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+.blue {
+  color: blue;
+}
+
+.init {
+  color: black;
+}

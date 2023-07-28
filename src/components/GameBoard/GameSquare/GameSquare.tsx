@@ -2,11 +2,16 @@ import classes from './GameSquare.module.css';
 
 type GameSquareType = {
   rowProps: string;
+  styleProps: string;
 };
 
-const GameSquare = ({ rowProps }: GameSquareType) => {
+const GameSquare = ({ rowProps, styleProps }: GameSquareType) => {
+  const style = 'gamesquare';
+
   // console.log(rowProps);
-  return <div className={classes.gamesquare}>{rowProps}</div>;
+  return (
+    <div className={`${classes[style]} ${classes[styleProps]}`}>{rowProps}</div>
+  );
 };
 
 export default GameSquare;
