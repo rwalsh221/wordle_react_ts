@@ -2,24 +2,19 @@ import React from 'react';
 import classes from './GameBoard.module.css';
 import GameSquare from './GameSquare/GameSquare';
 
+import { GameStateType } from '../../types/types';
+
 // type GameBoardType = {
 //   userInputProps: string[][];
 // };
 
 type GameBoardPropTypes = {
-  userInputProps: {
-    [key: string]: {
-      active: boolean;
-      input: string[];
-      inWinningWord: string[];
-      inCorrectPlace: string[];
-    };
-  };
+  gameStateProps: GameStateType;
   winningWordProps: string;
 };
 
 const GameBoard = ({
-  userInputProps,
+  gameStateProps,
   winningWordProps,
 }: GameBoardPropTypes) => {
   // const renderGameSquare = () => {
@@ -39,7 +34,7 @@ const GameBoard = ({
 
   const renderGameSquare = () => {
     const gameSquares: React.ReactElement[] = [];
-    const userInputPropsKeys = Object.keys(userInputProps);
+    const userInputPropsKeys = Object.keys(gameStateProps);
 
     // ADD NOT IN WORD KEY TO OBJ
     const gameSquareStyleHandler = (inputObj) => {
@@ -53,8 +48,7 @@ const GameBoard = ({
         case inputObj.inCorrectPlace:
           style = 'green';
           break;
-        case inputObj.inCorrectPlace === false &&
-          inputObj.inWinngingword === false:
+        case !inputObj.inCorrectPlace && !inputObj.inWinningword:
           style = 'red';
           break;
         default:
@@ -65,18 +59,18 @@ const GameBoard = ({
     };
 
     userInputPropsKeys.forEach((key) => {
-      const copyGuess = [...userInputProps[key].input];
+      const copyGuess = [...gameStateProps[key].input];
       const winningWordArr = winningWordProps.split('');
 
       for (let i = 0; i < 5; i++) {
-        if (userInputProps[key].input[i]) {
+        if (gameStateProps[key].input[i]) {
           // compare guess to win
 
           gameSquares.push(
             <GameSquare
               key={`${key}${i}`}
-              rowProps={userInputProps[key].input[i].input}
-              styleProps={gameSquareStyleHandler(userInputProps[key].input[i])}
+              rowProps={gameStateProps[key].input[i].input}
+              styleProps={gameSquareStyleHandler(gameStateProps[key].input[i])}
             />
           );
         } else {

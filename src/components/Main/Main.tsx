@@ -2,21 +2,15 @@ import { useState, useEffect } from 'react';
 import classes from './Main.module.css';
 import GameBoard from '../GameBoard/GameBoard';
 import Keyboard from '../Keyboard/Keyboard';
+
+import type { GameStateType } from '../../types/types';
+
 // import json from '../../json/words.json';
 
-type userInputType = {
+type UserInputType = {
   input: string;
   inWinningWord: boolean | null;
   inCorrectPlace: boolean | null;
-};
-
-type gameStateType = {
-  [key: string]: {
-    active: boolean;
-    input: userInputType[];
-    inWinningWord: string[];
-    inCorrectPlace: string[];
-  };
 };
 
 type rowType = {
@@ -55,6 +49,9 @@ const Main = () => {
 
   console.log(winningWord);
 
+  // TODO: SOMETHING WRONGZ WITH LAST ROW ENTER
+  // TODO: LAST GUESS DLELETE NOT WORKING ONLY LETS 'ENTER'
+
   // 1, for each throgh obj.keys to geneertate game squares
   // CAN USE ACTIVE KEY TO PREVENT UNESSCERAY RERENDER
 
@@ -64,14 +61,46 @@ const Main = () => {
 
   // 4, user inWinninngWord and inCorrectPlace to style keyboard or seperate to prevent additonal loop throgh all keys
 
-  const [gameState, setGameState] = useState<gameStateType>({
-    row1: { active: true, input: [], inWinningWord: [], inCorrectPlace: [] },
-    row2: { active: false, input: [], inWinningWord: [], inCorrectPlace: [] },
-    row3: { active: false, input: [], inWinningWord: [], inCorrectPlace: [] },
-    row4: { active: false, input: [], inWinningWord: [], inCorrectPlace: [] },
-    row5: { active: false, input: [], inWinningWord: [], inCorrectPlace: [] },
-    row6: { active: false, input: [], inWinningWord: [], inCorrectPlace: [] },
+  const [gameState, setGameState] = useState<GameStateType>({
+    row1: {
+      status: 'active',
+      input: [],
+      inWinningWord: [],
+      inCorrectPlace: [],
+    },
+    row2: {
+      status: 'inactive',
+      input: [],
+      inWinningWord: [],
+      inCorrectPlace: [],
+    },
+    row3: {
+      status: 'inactive',
+      input: [],
+      inWinningWord: [],
+      inCorrectPlace: [],
+    },
+    row4: {
+      status: 'inactive',
+      input: [],
+      inWinningWord: [],
+      inCorrectPlace: [],
+    },
+    row5: {
+      status: 'inactive',
+      input: [],
+      inWinningWord: [],
+      inCorrectPlace: [],
+    },
+    row6: {
+      status: 'inactive',
+      input: [],
+      inWinningWord: [],
+      inCorrectPlace: [],
+    },
   });
+
+  console.log(gameState);
 
   const [keyboardController, setKeyboardController] = useState({
     inCorrectPlace: [],
@@ -84,6 +113,10 @@ const Main = () => {
   // TODO: ADD POPUP WITH BASIC GAME RULES
 
   // const [userInput2, setUserInput2] = useState<string[][]>([]);
+
+  const deleteHandler = (inputArr: UserInputType[]) => {
+    inputArr.pop();
+  };
 
   const checkWordHandler = (row: rowType) =>
     //   winningWord: string,
@@ -132,13 +165,13 @@ const Main = () => {
 
       //
       gameStateInputCopy.forEach((el, index) => {
-        console.log('this is EL EL EL', el);
+        console.log('this is EL EL EL', el, winningWordArr);
         if (winningWordArr.indexOf(el.input) !== -1) {
           el.inWinningWord = true;
           winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
           // gameStateInputCopy.splice(index, 1);
 
-          inWinnigWordTest.push(winningWordArr.pop());
+          // inWinnigWordTest.push(winningWordArr.pop());
         } else {
           el.inWinningWord = false;
         }
@@ -186,6 +219,11 @@ const Main = () => {
     };
 
   const userInputHandler = (event: React.KeyboardEvent) => {
+    const inputKey = {
+      backSpace: 'Backspace',
+      enter: 'Enter',
+    };
+
     const gameStateCopy = { ...gameState };
     let keyPressed: string | null = event.key;
     const userInputKeys = Object.keys(gameState);
@@ -198,7 +236,8 @@ const Main = () => {
       if (keyPressed === null) {
         return;
       }
-      if (!gameStateCopy[key].active) {
+      // MOVES TO NEXT ITEM IN KEY IF STATUS IS INACTIVE
+      if (gameStateCopy[key].status === 'inactive') {
         return;
       }
       // SET NEXT ROW ACTIVE && KEY === 'ENTER'
@@ -206,14 +245,18 @@ const Main = () => {
         gameStateCopy[key].input.length === 5 &&
         index !== userInputKeys.length - 1
       ) {
-        if (keyPressed === 'Enter') {
+        if (keyPressed === inputKey.backSpace) {
+          deleteHandler(gameStateCopy[key].input);
+          return;
+        }
+        if (keyPressed === inputKey.enter) {
           checkWordHandler(
             // winningWord,
             // gameStateCopy[key].input,
             gameStateCopy[key]
           );
-          gameStateCopy[key].active = false;
-          gameStateCopy[userInputKeys[index + 1]].active = true;
+          gameStateCopy[key].status = 'inactive';
+          gameStateCopy[userInputKeys[index + 1]].status = 'active';
           keyPressed = null;
         }
         console.log(gameState);
@@ -221,8 +264,8 @@ const Main = () => {
         return;
       }
       // DELETE KEY
-      if (keyPressed === 'Backspace') {
-        gameStateCopy[key].input.pop();
+      if (keyPressed === inputKey.backSpace) {
+        deleteHandler(gameStateCopy[key].input);
         return;
       }
       // GAME END
@@ -317,7 +360,7 @@ const Main = () => {
       }}
     >
       <p>{gameRunning ? 'game is running' : 'game is not running'}</p>
-      <GameBoard userInputProps={gameState} winningWordProps={winningWord} />
+      <GameBoard gameStateProps={gameState} winningWordProps={winningWord} />
       {/* <Keyboard setUserInput={setUserInput} /> */}
     </main>
   );
