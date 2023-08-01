@@ -9,4 +9,7 @@
   align-items: center;
   gap: 0.5rem;
   width: max-content;
+  background-color: lavender;
+  /* position: relative;
+  z-index: 200;*/
 }

@@ -37,6 +37,7 @@ const GameBoard = ({
     const userInputPropsKeys = Object.keys(gameStateProps);
 
     // ADD NOT IN WORD KEY TO OBJ
+    // FOR COMPLETE STATUS
     const gameSquareStyleHandler = (inputObj) => {
       console.log('stlye', inputObj);
       let style: string;
@@ -63,7 +64,19 @@ const GameBoard = ({
       const winningWordArr = winningWordProps.split('');
 
       for (let i = 0; i < 5; i++) {
-        if (gameStateProps[key].input[i]) {
+        if (
+          gameStateProps[key].input[i] &&
+          gameStateProps[key].status === 'active'
+        ) {
+          gameSquares.push(
+            <GameSquare
+              key={`${key}${i}`}
+              rowProps={gameStateProps[key].input[i].input}
+              styleProps="init"
+              // checkStyleProps="gamesquare_check_win"
+            />
+          );
+        } else if (gameStateProps[key].input[i]) {
           // compare guess to win
 
           gameSquares.push(
@@ -75,7 +88,7 @@ const GameBoard = ({
           );
         } else {
           gameSquares.push(
-            <GameSquare key={`${key}${i}`} rowProps={'*'} styleProps="init" />
+            <GameSquare key={`${key}${i}`} rowProps={'?'} styleProps="init" />
           );
         }
       }

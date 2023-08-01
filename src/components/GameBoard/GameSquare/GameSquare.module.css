@@ -9,20 +9,82 @@
   text-align: center;
   /* vertical-align: text-bottom; */
   line-height: var(--game-square-size);
+  /* box-shadow: 2px 2px 2px black inset; */
+  background-color: lavender;
+  text-transform: capitalize;
+  font-weight: bold;
 }
 
+.gamesquare_check_win {
+  animation: test2 1.5s ease both;
+}
+
+/* .gamesquare::before {
+  height: 100%;
+  width: 100%;
+  background-color: hotpink;
+  z-index: -200;
+  content: '';
+  display: block;
+  transform: translateX(10px);
+  position: relative;
+} */
+
 .red {
-  color: red;
+  --bgcolor: rgb(180, 79, 79);
+  --color: rgb(71, 3, 3);
+  color: var(--color);
+  animation: test2 1.5s ease both;
 }
 
 .green {
-  color: green;
+  --color: rgb(1, 59, 1);
+  --bgcolor: rgb(128, 209, 128);
+  /* border: 2px solid var(--color); */
+  color: var(--color);
+  /* animation: test 1s ease-in forwards; */
+  animation: test2 1.5s ease both;
+}
+
+@keyframes test {
+  0% {
+    color: black;
+  }
+
+  99% {
+    color: black;
+  }
+
+  100% {
+    color: initial;
+  }
+}
+
+@keyframes test2 {
+  0% {
+    color: black;
+    background-color: initial;
+  }
+
+  50% {
+    color: gold;
+    background-color: gold;
+  }
+
+  100% {
+    color: var(--color);
+    background-color: var(--bgcolor);
+  }
 }
 
 .blue {
-  color: blue;
+  --bgcolor: rgb(99, 99, 197);
+  --color: rgb(7, 7, 80);
+  animation: test2 1.5s ease both;
+  color: var(--color);
 }
 
 .init {
-  color: black;
+  --color: black;
+  color: var(--color);
 }

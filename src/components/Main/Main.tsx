@@ -50,7 +50,6 @@ const Main = () => {
   console.log(winningWord);
 
   // TODO: SOMETHING WRONGZ WITH LAST ROW ENTER
-  // TODO: LAST GUESS DLELETE NOT WORKING ONLY LETS 'ENTER'
 
   // 1, for each throgh obj.keys to geneertate game squares
   // CAN USE ACTIVE KEY TO PREVENT UNESSCERAY RERENDER
