@@ -31,17 +31,17 @@
 } */
 
 .red {
-  --bgcolor: rgb(180, 79, 79);
-  --color: rgb(71, 3, 3);
-  color: var(--color);
+  --animation-bg-color: var(--color-red-light);
+  --animation-font-color: var(--color-red-dark);
+  color: var(--animation-font-color);
   animation: test2 1.5s ease both;
 }
 
 .green {
-  --color: rgb(1, 59, 1);
-  --bgcolor: rgb(128, 209, 128);
-  /* border: 2px solid var(--color); */
-  color: var(--color);
+  --animation-font-color: var(--color-green-dark);
+  --animation-bg-color: var(--color-green-light);
+  /* border: 2px solid var(--animation-font-color); */
+  color: var(--animation-font-color);
   /* animation: test 1s ease-in forwards; */
   animation: test2 1.5s ease both;
 }
@@ -72,19 +72,19 @@
   }
 
   100% {
-    color: var(--color);
-    background-color: var(--bgcolor);
+    color: var(--animation-font-color);
+    background-color: var(--animation-bg-color);
   }
 }
 
 .blue {
-  --bgcolor: rgb(99, 99, 197);
-  --color: rgb(7, 7, 80);
+  --animation-font-color: var(--color-blue-dark);
+  --animation-bg-color: var(--color-blue-light);
   animation: test2 1.5s ease both;
-  color: var(--color);
+  color: var(--animation-font-color);
 }
 
 .init {
-  --color: black;
-  color: var(--color);
+  --animation-font-color: black;
+  color: var(--animation-font-color);
 }

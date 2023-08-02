@@ -1,9 +1,39 @@
 header {
-  border-bottom: var(--border-grey);
   text-align: center;
   padding: 1rem 0;
 }
 
-header h1 {
+.header_container {
+  margin: 0 auto;
+  width: 50%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+  border: var(--border-grey);
+  padding: 2rem;
+  justify-items: center;
+}
+
+.header_container span {
+  width: 70%;
+  font-size: 2.5rem;
+  padding: 0.5rem;
   text-transform: capitalize;
+  font-weight: bold;
+  border: var(--border-grey);
+}
+
+.header_red {
+  color: var(--color-red-dark);
+  background-color: var(--color-red-light);
+}
+
+.header_blue {
+  color: var(--color-blue-dark);
+  background-color: var(--color-blue-light);
+}
+
+.header_green {
+  color: var(--color-green-dark);
+  background-color: var(--color-green-light);
 }
