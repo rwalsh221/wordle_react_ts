@@ -1,0 +1,30 @@
+.keyboard {
+  width: 30%;
+  margin: 0 auto;
+}
+
+.keyboard_top_container,
+.keyboard_bottom_container {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+}
+
+.keyboard_top_container {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  margin-bottom: 0.5rem;
+}
+.keyboard_bottom_container {
+  display: grid;
+  grid-template-columns: 2fr repeat(7, 1fr) 2fr;
+}
+
+.keyboard_bottom_container div:first-child {
+  width: 50%;
+  justify-self: end;
+}
+.keyboard_bottom_container div:nth-child(9) {
+  width: 50%;
+  justify-self: start;
+}

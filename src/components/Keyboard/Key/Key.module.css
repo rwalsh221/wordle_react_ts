@@ -1,0 +1,25 @@
+.key {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: capitalize;
+  font-weight: bold;
+  font-size: 1.2rem;
+  height: 4rem;
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+.green {
+  background-color: var(--color-green-light);
+  color: var(--color-green-dark);
+}
+
+.blue {
+  background-color: var(--color-blue-light);
+  color: var(--color-blue-dark);
+}
+
+.init {
+  background-color: rgb(128, 128, 138);
+}

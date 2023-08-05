@@ -102,8 +102,8 @@ const Main = () => {
   console.log(gameState);
 
   const [keyboardController, setKeyboardController] = useState({
-    inCorrectPlace: [],
-    inWinningWord: [],
+    inCorrectPlace: ['a'],
+    inWinningWord: ['z', 'a'],
   });
 
   // TODO: press enter to check winning word - last item on array needs to be enter to continue
@@ -361,6 +361,7 @@ const Main = () => {
       <p>{gameRunning ? 'game is running' : 'game is not running'}</p>
       <GameBoard gameStateProps={gameState} winningWordProps={winningWord} />
       {/* <Keyboard setUserInput={setUserInput} /> */}
+      <Keyboard keyboardControllerProps={keyboardController}></Keyboard>
     </main>
   );
 };
