@@ -203,6 +203,33 @@ const Main = () => {
     console.log(inCorrectPlaceTest);
   };
 
+  const validateKeyPressedHandler = (
+    keyPressed: string | null,
+    keyPressedCode: string,
+    inputArr
+  ) => {
+    console.log(keyPressed);
+    console.log(keyPressedCode);
+    let validate = true;
+    if (keyPressed === null) {
+      validate = false;
+      return validate;
+    }
+    if (keyPressedCode[0] !== 'K') {
+      validate = false;
+    }
+    if (keyPressedCode === 'Backspace') {
+      console.log(
+        'BACKSPACEE  E E E E E E E E E E E E EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
+      );
+      validate = true;
+    }
+    if (keyPressedCode === 'Enter' && inputArr.length === 5) {
+      validate = true;
+    }
+    return validate;
+  };
+
   const userInputHandler = (event: React.KeyboardEvent) => {
     const inputKey = {
       backSpace: 'Backspace',
@@ -212,6 +239,8 @@ const Main = () => {
     const gameStateCopy = { ...gameState };
     const keyboardControllerCopy = { ...keyboardController };
     let keyPressed: string | null = event.key;
+    const keyPressedCode: string | null = event.code;
+
     const userInputKeys = Object.keys(gameState);
 
     if (!gameRunning) {
@@ -219,7 +248,27 @@ const Main = () => {
     }
     // NEED TO CHNAGE TO FOR LOOP SO CAN USE BREAK AFTER 'ENTER'
     userInputKeys.forEach((key, index) => {
-      if (keyPressed === null) {
+      console.log(event);
+      if (
+        !validateKeyPressedHandler(
+          keyPressed,
+          keyPressedCode,
+          gameStateCopy[key].input
+        ) ||
+        !gameRunning
+      ) {
+        return;
+      }
+      // GAME END NEEDS TO BE FUNC IN ENTER IF BLOCK
+      if (
+        gameStateCopy[key].input.length === 5 &&
+        index === userInputKeys.length - 1 &&
+        gameStateCopy[key].status === 'inactive'
+      ) {
+        console.log(
+          'GAGAMAMAMMAMAAMMAMAMAMA ENENENENENNENENENENENENENENNENENE'
+        );
+        setGameRunning(false);
         return;
       }
       // MOVES TO NEXT ITEM IN KEY IF STATUS IS INACTIVE
@@ -227,10 +276,7 @@ const Main = () => {
         return;
       }
       // SET NEXT ROW ACTIVE && KEY === 'ENTER'
-      if (
-        gameStateCopy[key].input.length === 5 &&
-        index !== userInputKeys.length - 1
-      ) {
+      if (gameStateCopy[key].input.length === 5) {
         if (keyPressed === inputKey.backSpace) {
           deleteHandler(gameStateCopy[key].input);
           return;
@@ -243,7 +289,9 @@ const Main = () => {
             keyboardControllerCopy
           );
           gameStateCopy[key].status = 'inactive';
-          gameStateCopy[userInputKeys[index + 1]].status = 'active';
+          if (index !== userInputKeys.length - 1) {
+            gameStateCopy[userInputKeys[index + 1]].status = 'active';
+          }
           keyPressed = null;
         }
         console.log(gameState);
@@ -255,14 +303,7 @@ const Main = () => {
         deleteHandler(gameStateCopy[key].input);
         return;
       }
-      // GAME END
-      if (
-        gameStateCopy[key].input.length === 5 &&
-        index === userInputKeys.length - 1
-      ) {
-        setGameRunning(false);
-        return;
-      }
+
       console.log('no return');
       gameStateCopy[key].input.push({
         input: keyPressed,
