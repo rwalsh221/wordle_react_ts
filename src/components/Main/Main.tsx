@@ -102,14 +102,14 @@ const Main = () => {
   console.log(gameState);
 
   const [keyboardController, setKeyboardController] = useState({
-    inCorrectPlace: ['a'],
-    inWinningWord: ['z', 'a'],
+    inCorrectPlace: [],
+    inWinningWord: [],
   });
 
   // TODO: press enter to check winning word - last item on array needs to be enter to continue
-  // TODO: press backspace to pop from array
   // TODO: ADD KEY CODE TO PREVENTER ENTER CTRL ETC SHOWING ON BOARD
   // TODO: ADD POPUP WITH BASIC GAME RULES
+  // TODO: ONLY SET STATE IF CHANGE MADE
 
   // const [userInput2, setUserInput2] = useState<string[][]>([]);
 
@@ -117,105 +117,91 @@ const Main = () => {
     inputArr.pop();
   };
 
-  const checkWordHandler = (row: rowType) =>
-    //   winningWord: string,
-    //   guessedWord: string[],
-    //   row: rowType
-    // ) => {
-    //   const winningWordArr = winningWord.split('');
+  const checkWordHandler = (row: rowType, keyboardControllerCopy) => {
+    console.log('hello');
+    console.log(row);
+    const winningWordArr = winningWord.split('');
+    const gameStateInputCopy = [...row.input];
+    // NEEDED FOR DEEP COPY OF STATE INPUT ????? not sure
+    // row.input.forEach((el) => {
+    //   console.log(el);
+    //   gameStateInputCopy.push(structuredClone(el));
+    // });
+    console.log(gameStateInputCopy);
+    const inWinnigWordTest = [];
+    const inCorrectPlaceTest = [];
 
-    //   for (let i = 0; i < guessedWord.length; i++) {
-    //     if (winningWordArr[i] === guessedWord[i]) {
-    //       row.inCorrectPlace.push(guessedWord[i]);
-    //     }
-    //     if (winningWord.indexOf(guessedWord[i]) !== -1) {
-    //       row.inWinningWord.push(guessedWord[i]);
-    //     }
-    //   }
-    //   console.log(row);
-    {
-      console.log('hello');
-      console.log(row);
-      const winningWordArr = winningWord.split('');
-      const gameStateInputCopy = [...row.input];
-      // NEEDED FOR DEEP COPY OF STATE INPUT ????? not sure
-      // row.input.forEach((el) => {
-      //   console.log(el);
-      //   gameStateInputCopy.push(structuredClone(el));
-      // });
-      console.log(gameStateInputCopy);
-      const inWinnigWordTest = [];
-      const inCorrectPlaceTest = [];
-
-      for (let i = winningWordArr.length - 1; i >= 0; i--) {
-        console.log(winningWordArr[i]);
-        if (winningWordArr[i] === gameStateInputCopy[i].input) {
-          console.log(true, winningWordArr[i], gameStateInputCopy[i]);
-          inCorrectPlaceTest.push(winningWordArr.splice(i, 1));
-          gameStateInputCopy[i].inWinningWord = false;
-          gameStateInputCopy[i].inCorrectPlace = true;
-          gameStateInputCopy.splice(i, 1);
-        } else {
-          console.log(false, winningWordArr[i], gameStateInputCopy[i]);
-          gameStateInputCopy[i].inCorrectPlace = false;
-        }
+    for (let i = winningWordArr.length - 1; i >= 0; i--) {
+      console.log(winningWordArr[i]);
+      if (winningWordArr[i] === gameStateInputCopy[i].input) {
+        keyboardControllerCopy.inCorrectPlace.push(winningWordArr[i]);
+        console.log(true, winningWordArr[i], gameStateInputCopy[i]);
+        inCorrectPlaceTest.push(winningWordArr.splice(i, 1));
+        gameStateInputCopy[i].inWinningWord = false;
+        gameStateInputCopy[i].inCorrectPlace = true;
+        gameStateInputCopy.splice(i, 1);
+      } else {
+        console.log(false, winningWordArr[i], gameStateInputCopy[i]);
+        gameStateInputCopy[i].inCorrectPlace = false;
       }
-      console.log('betwtte', gameStateInputCopy);
+    }
+    console.log('betwtte', gameStateInputCopy);
 
-      //
-      gameStateInputCopy.forEach((el, index) => {
-        console.log('this is EL EL EL', el, winningWordArr);
-        if (winningWordArr.indexOf(el.input) !== -1) {
-          el.inWinningWord = true;
-          winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
-          // gameStateInputCopy.splice(index, 1);
+    //
+    gameStateInputCopy.forEach((el, index) => {
+      console.log('this is EL EL EL', el, winningWordArr);
+      if (winningWordArr.indexOf(el.input) !== -1) {
+        el.inWinningWord = true;
+        winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
+        // gameStateInputCopy.splice(index, 1);
 
-          // inWinnigWordTest.push(winningWordArr.pop());
-        } else {
-          el.inWinningWord = false;
-        }
-      });
-      //
+        // inWinnigWordTest.push(winningWordArr.pop());
+        keyboardControllerCopy.inWinningWord.push(el.input);
+      } else {
+        el.inWinningWord = false;
+      }
+    });
+    //
 
-      // while (gameStateInputCopy.length) {
-      //   console.log('while //////////////////////////////////////////////');
-      //   console.log(winningWordArr);
-      //   console.log(winningWordArr[winningWordArr.length - 1]);
-      //   console.log(gameStateInputCopy[winningWordArr.length - 1].input);
-      //   console.log(
-      //     winningWordArr.indexOf(
-      //       gameStateInputCopy[winningWordArr.length - 1].input
-      //     )
-      //   );
-      //   console.log('while //////////////////////////////////////////////');
+    // while (gameStateInputCopy.length) {
+    //   console.log('while //////////////////////////////////////////////');
+    //   console.log(winningWordArr);
+    //   console.log(winningWordArr[winningWordArr.length - 1]);
+    //   console.log(gameStateInputCopy[winningWordArr.length - 1].input);
+    //   console.log(
+    //     winningWordArr.indexOf(
+    //       gameStateInputCopy[winningWordArr.length - 1].input
+    //     )
+    //   );
+    //   console.log('while //////////////////////////////////////////////');
 
-      //   if (
-      //     winningWordArr.indexOf(
-      //       gameStateInputCopy[winningWordArr.length - 1].input
-      //     ) !== -1
-      //   ) {
-      //     console.log(
-      //       'true inword',
-      //       gameStateInputCopy[winningWordArr.length - 1]
-      //     );
-      //     gameStateInputCopy[winningWordArr.length - 1].inWinningWord = true;
-      //     gameStateInputCopy.splice(
-      //       gameStateInputCopy.indexOf(
-      //         winningWordArr[winningWordArr.length - 1],
-      //         1
-      //       )
-      //     );
+    //   if (
+    //     winningWordArr.indexOf(
+    //       gameStateInputCopy[winningWordArr.length - 1].input
+    //     ) !== -1
+    //   ) {
+    //     console.log(
+    //       'true inword',
+    //       gameStateInputCopy[winningWordArr.length - 1]
+    //     );
+    //     gameStateInputCopy[winningWordArr.length - 1].inWinningWord = true;
+    //     gameStateInputCopy.splice(
+    //       gameStateInputCopy.indexOf(
+    //         winningWordArr[winningWordArr.length - 1],
+    //         1
+    //       )
+    //     );
 
-      //     inWinnigWordTest.push(winningWordArr.pop());
-      //   } else {
-      //     console.log('12212', gameStateInputCopy[winningWordArr.length - 1]);
-      //     gameStateInputCopy[winningWordArr.length - 1].inWinningWord = false;
-      //     winningWordArr.pop();
-      //   }
-      // }
-      console.log(inWinnigWordTest);
-      console.log(inCorrectPlaceTest);
-    };
+    //     inWinnigWordTest.push(winningWordArr.pop());
+    //   } else {
+    //     console.log('12212', gameStateInputCopy[winningWordArr.length - 1]);
+    //     gameStateInputCopy[winningWordArr.length - 1].inWinningWord = false;
+    //     winningWordArr.pop();
+    //   }
+    // }
+    console.log(inWinnigWordTest);
+    console.log(inCorrectPlaceTest);
+  };
 
   const userInputHandler = (event: React.KeyboardEvent) => {
     const inputKey = {
@@ -224,6 +210,7 @@ const Main = () => {
     };
 
     const gameStateCopy = { ...gameState };
+    const keyboardControllerCopy = { ...keyboardController };
     let keyPressed: string | null = event.key;
     const userInputKeys = Object.keys(gameState);
 
@@ -252,7 +239,8 @@ const Main = () => {
           checkWordHandler(
             // winningWord,
             // gameStateCopy[key].input,
-            gameStateCopy[key]
+            gameStateCopy[key],
+            keyboardControllerCopy
           );
           gameStateCopy[key].status = 'inactive';
           gameStateCopy[userInputKeys[index + 1]].status = 'active';
@@ -282,7 +270,10 @@ const Main = () => {
         inCorrectPlace: null,
       });
     });
+    console.log('return test');
+    console.log(keyboardControllerCopy);
     setGameState({ ...gameStateCopy });
+    setKeyboardController({ ...keyboardControllerCopy });
   };
 
   /*
