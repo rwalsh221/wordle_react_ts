@@ -205,11 +205,8 @@ const Main = () => {
 
   const validateKeyPressedHandler = (
     keyPressed: string | null,
-    keyPressedCode: string,
-    inputArr
+    keyPressedCode: string
   ) => {
-    console.log(keyPressed);
-    console.log(keyPressedCode);
     let validate = true;
     if (keyPressed === null) {
       validate = false;
@@ -219,14 +216,12 @@ const Main = () => {
       validate = false;
     }
     if (keyPressedCode === 'Backspace') {
-      console.log(
-        'BACKSPACEE  E E E E E E E E E E E E EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE'
-      );
       validate = true;
     }
-    if (keyPressedCode === 'Enter' && inputArr.length === 5) {
+    if (keyPressedCode === 'Enter') {
       validate = true;
     }
+
     return validate;
   };
 
@@ -242,77 +237,58 @@ const Main = () => {
     const keyPressedCode: string | null = event.code;
 
     const userInputKeys = Object.keys(gameState);
+    // MOVE VALIDATE HERE TO PREVENT RERENDER
+
+    if (!validateKeyPressedHandler(keyPressed, keyPressedCode)) {
+      return;
+    }
 
     if (!gameRunning) {
       return;
     }
     // NEED TO CHNAGE TO FOR LOOP SO CAN USE BREAK AFTER 'ENTER'
     userInputKeys.forEach((key, index) => {
-      console.log(event);
-      if (
-        !validateKeyPressedHandler(
-          keyPressed,
-          keyPressedCode,
-          gameStateCopy[key].input
-        ) ||
-        !gameRunning
-      ) {
-        return;
-      }
-      // GAME END NEEDS TO BE FUNC IN ENTER IF BLOCK
-      if (
-        gameStateCopy[key].input.length === 5 &&
-        index === userInputKeys.length - 1 &&
-        gameStateCopy[key].status === 'inactive'
-      ) {
-        console.log(
-          'GAGAMAMAMMAMAAMMAMAMAMA ENENENENENNENENENENENENENENNENENE'
-        );
-        setGameRunning(false);
-        return;
-      }
+      // REMOVE FROM FOR EACH
+
       // MOVES TO NEXT ITEM IN KEY IF STATUS IS INACTIVE
-      if (gameStateCopy[key].status === 'inactive') {
+      if (gameStateCopy[key].status === 'inactive' || keyPressed === null) {
         return;
       }
-      // SET NEXT ROW ACTIVE && KEY === 'ENTER'
-      if (gameStateCopy[key].input.length === 5) {
-        if (keyPressed === inputKey.backSpace) {
-          deleteHandler(gameStateCopy[key].input);
+
+      // CHECK WIN
+      if (
+        keyPressed === inputKey.enter &&
+        gameStateCopy[key].input.length === 5
+      ) {
+        checkWordHandler(gameStateCopy[key], keyboardControllerCopy);
+        gameStateCopy[key].status = 'inactive';
+        if (index !== userInputKeys.length - 1) {
+          gameStateCopy[userInputKeys[index + 1]].status = 'active';
+        }
+        // END GAME
+        if (index === userInputKeys.length - 1) {
+          setGameRunning(false);
           return;
         }
-        if (keyPressed === inputKey.enter) {
-          checkWordHandler(
-            // winningWord,
-            // gameStateCopy[key].input,
-            gameStateCopy[key],
-            keyboardControllerCopy
-          );
-          gameStateCopy[key].status = 'inactive';
-          if (index !== userInputKeys.length - 1) {
-            gameStateCopy[userInputKeys[index + 1]].status = 'active';
-          }
-          keyPressed = null;
-        }
-        console.log(gameState);
-        console.log('enter return');
+        keyPressed = null;
         return;
       }
+
       // DELETE KEY
       if (keyPressed === inputKey.backSpace) {
         deleteHandler(gameStateCopy[key].input);
         return;
       }
 
-      console.log('no return');
-      gameStateCopy[key].input.push({
-        input: keyPressed,
-        inWinningWord: null,
-        inCorrectPlace: null,
-      });
+      // create func with check for ENTER BACKSPACE TO prevent rerender
+      if (gameStateCopy[key].input.length < 5) {
+        gameStateCopy[key].input.push({
+          input: keyPressed,
+          inWinningWord: null,
+          inCorrectPlace: null,
+        });
+      }
     });
-    console.log('return test');
-    console.log(keyboardControllerCopy);
     setGameState({ ...gameStateCopy });
     setKeyboardController({ ...keyboardControllerCopy });
   };
