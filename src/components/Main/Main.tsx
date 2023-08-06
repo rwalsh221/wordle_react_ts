@@ -5,8 +5,6 @@ import Keyboard from '../Keyboard/Keyboard';
 
 import type { GameStateType } from '../../types/types';
 
-// import json from '../../json/words.json';
-
 type UserInputType = {
   input: string;
   inWinningWord: boolean | null;
@@ -18,6 +16,11 @@ type rowType = {
   input: string[];
   inWinningWord: string[];
   inCorrectPlace: string[];
+};
+
+type InputKey = {
+  backSpace: 'Backspace';
+  enter: 'Enter';
 };
 
 const Main = () => {
@@ -48,8 +51,6 @@ const Main = () => {
   }, []);
 
   console.log(winningWord);
-
-  // TODO: SOMETHING WRONGZ WITH LAST ROW ENTER
 
   // 1, for each throgh obj.keys to geneertate game squares
   // CAN USE ACTIVE KEY TO PREVENT UNESSCERAY RERENDER
@@ -106,10 +107,10 @@ const Main = () => {
     inWinningWord: [],
   });
 
-  // TODO: press enter to check winning word - last item on array needs to be enter to continue
-  // TODO: ADD KEY CODE TO PREVENTER ENTER CTRL ETC SHOWING ON BOARD
+  // TODO: press enter to check winning word - last item on array needs to be enter to continu  NEED REFACTOR
+
   // TODO: ADD POPUP WITH BASIC GAME RULES
-  // TODO: ONLY SET STATE IF CHANGE MADE
+  // TODO: ADD STYLE FOR LETTERS NOT IN WORD ON KEYBOARD
 
   // const [userInput2, setUserInput2] = useState<string[][]>([]);
 
@@ -118,8 +119,6 @@ const Main = () => {
   };
 
   const checkWordHandler = (row: rowType, keyboardControllerCopy) => {
-    console.log('hello');
-    console.log(row);
     const winningWordArr = winningWord.split('');
     const gameStateInputCopy = [...row.input];
     // NEEDED FOR DEEP COPY OF STATE INPUT ????? not sure
@@ -127,7 +126,7 @@ const Main = () => {
     //   console.log(el);
     //   gameStateInputCopy.push(structuredClone(el));
     // });
-    console.log(gameStateInputCopy);
+
     const inWinnigWordTest = [];
     const inCorrectPlaceTest = [];
 
@@ -149,7 +148,6 @@ const Main = () => {
 
     //
     gameStateInputCopy.forEach((el, index) => {
-      console.log('this is EL EL EL', el, winningWordArr);
       if (winningWordArr.indexOf(el.input) !== -1) {
         el.inWinningWord = true;
         winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
@@ -199,8 +197,6 @@ const Main = () => {
     //     winningWordArr.pop();
     //   }
     // }
-    console.log(inWinnigWordTest);
-    console.log(inCorrectPlaceTest);
   };
 
   const validateKeyPressedHandler = (
@@ -225,19 +221,42 @@ const Main = () => {
     return validate;
   };
 
+  const pushInputHandler = (
+    input: UserInputType[],
+    keyPressed: string | null,
+    inputKey: InputKey
+  ) => {
+    if (keyPressed === null) {
+      return false;
+    }
+    if (keyPressed === inputKey.backSpace || keyPressed === inputKey.enter) {
+      return false;
+    }
+
+    if (input.length < 5) {
+      input.push({
+        input: keyPressed,
+        inWinningWord: null,
+        inCorrectPlace: null,
+      });
+      return true;
+    }
+    return false;
+  };
+
   const userInputHandler = (event: React.KeyboardEvent) => {
-    const inputKey = {
+    const inputKey: InputKey = {
       backSpace: 'Backspace',
       enter: 'Enter',
     };
 
+    const keyPressedCode: string | null = event.code;
+    const userInputKeys = Object.keys(gameState);
     const gameStateCopy = { ...gameState };
     const keyboardControllerCopy = { ...keyboardController };
-    let keyPressed: string | null = event.key;
-    const keyPressedCode: string | null = event.code;
 
-    const userInputKeys = Object.keys(gameState);
-    // MOVE VALIDATE HERE TO PREVENT RERENDER
+    let keyPressed: string | null = event.key;
+    let reRender = false;
 
     if (!validateKeyPressedHandler(keyPressed, keyPressedCode)) {
       return;
@@ -248,8 +267,6 @@ const Main = () => {
     }
     // NEED TO CHNAGE TO FOR LOOP SO CAN USE BREAK AFTER 'ENTER'
     userInputKeys.forEach((key, index) => {
-      // REMOVE FROM FOR EACH
-
       // MOVES TO NEXT ITEM IN KEY IF STATUS IS INACTIVE
       if (gameStateCopy[key].status === 'inactive' || keyPressed === null) {
         return;
@@ -271,90 +288,31 @@ const Main = () => {
           return;
         }
         keyPressed = null;
+        reRender = true;
         return;
       }
 
       // DELETE KEY
-      if (keyPressed === inputKey.backSpace) {
+      if (
+        keyPressed === inputKey.backSpace &&
+        gameStateCopy[key].input.length > 0
+      ) {
+        console.log(gameStateCopy[key].input);
         deleteHandler(gameStateCopy[key].input);
+        reRender = true;
         return;
       }
 
       // create func with check for ENTER BACKSPACE TO prevent rerender
-      if (gameStateCopy[key].input.length < 5) {
-        gameStateCopy[key].input.push({
-          input: keyPressed,
-          inWinningWord: null,
-          inCorrectPlace: null,
-        });
+      if (pushInputHandler(gameStateCopy[key].input, keyPressed, inputKey)) {
+        reRender = true;
       }
     });
-    setGameState({ ...gameStateCopy });
-    setKeyboardController({ ...keyboardControllerCopy });
+    if (reRender) {
+      setGameState({ ...gameStateCopy });
+      setKeyboardController({ ...keyboardControllerCopy });
+    }
   };
-
-  /*
-  OLD
-  const userInputHandler = (event: React.KeyboardEvent) => {
-    console.log('sadhjhdksjahdkajhdjksd');
-    const key = event.key;
-    if (userInput2[5]?.length === 5) {
-      setGameRunning(false);
-      return;
-    }
-    if (gameRunning === false) {
-      return;
-    }
-    const gameStateCopy = [...userInput2];
-    if (userInputCopy.length > 6) {
-      return;
-    }
-    if (userInputCopy.length === 0) {
-      console.log(2);
-      userInputCopy.push([]);
-      console.log(userInputCopy.length);
-    }
-
-    // WAIT FOR USER TO PRESS ENTER
-    if (userInputCopy[userInputCopy.length - 1].length === 5) {
-      if (key === 'Enter') {
-        // RUN CHECK GAME WIN FUNC
-        userInputCopy[userInputCopy.length - 1].push(key);
-        console.log(key);
-        return;
-      } else {
-        return;
-      }
-    }
-
-    // display user input
-    if (userInputCopy[userInputCopy.length - 1].length < 5) {
-      console.log(3);
-      if (key !== 'Backspace') {
-        userInputCopy[userInputCopy.length - 1].push({
-          key,
-          inWinningWord: null,
-          inCorrectPlace: null,
-        });
-      } else {
-        userInputCopy[userInputCopy.length - 1].pop();
-      }
-    } else {
-      userInputCopy.push([]);
-      userInputCopy[userInputCopy.length - 1].push(key);
-    }
-    console.log(userInputCopy);
-    setUserInput2(userInputCopy);
-    return;
-  };*/
-
-  /*
-  object keys for each or for loop.
-  if row active is true && input.length <5 push keypress to input array
-  else set active false and move to next key and set active true
-  
-
-  */
 
   // SET FALSE ON FAIL OR SUCCESS
   const [gameRunning, setGameRunning] = useState(true);
@@ -368,7 +326,6 @@ const Main = () => {
     >
       <p>{gameRunning ? 'game is running' : 'game is not running'}</p>
       <GameBoard gameStateProps={gameState} winningWordProps={winningWord} />
-      {/* <Keyboard setUserInput={setUserInput} /> */}
       <Keyboard keyboardControllerProps={keyboardController}></Keyboard>
     </main>
   );
