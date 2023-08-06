@@ -5,6 +5,7 @@ type KeyProps = {
   keyboardControllerProps: {
     inCorrectPlace: string[];
     inWinningWord: string[];
+    notInWinningWord: string[];
   };
 };
 
@@ -16,6 +17,10 @@ const Key = ({ keyIconProps, keyboardControllerProps }: KeyProps) => {
       keyboardControllerProps.inWinningWord.indexOf(keyIconProps) !== -1
     ) {
       return 'blue';
+    } else if (
+      keyboardControllerProps.notInWinningWord.indexOf(keyIconProps) !== -1
+    ) {
+      return 'red';
     } else {
       return 'init';
     }

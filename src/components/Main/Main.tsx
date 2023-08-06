@@ -23,6 +23,12 @@ type InputKey = {
   enter: 'Enter';
 };
 
+type KeyboardControllerType = {
+  inCorrectPlace: string[];
+  inWinningWord: string[];
+  notInWinningWord: string[];
+};
+
 const Main = () => {
   console.log('RENDER');
   // GET FROM JSON FILE
@@ -102,10 +108,12 @@ const Main = () => {
 
   console.log(gameState);
 
-  const [keyboardController, setKeyboardController] = useState({
-    inCorrectPlace: [],
-    inWinningWord: [],
-  });
+  const [keyboardController, setKeyboardController] =
+    useState<KeyboardControllerType>({
+      inCorrectPlace: [],
+      inWinningWord: [],
+      notInWinningWord: [],
+    });
 
   // TODO: press enter to check winning word - last item on array needs to be enter to continu  NEED REFACTOR
 
@@ -118,7 +126,10 @@ const Main = () => {
     inputArr.pop();
   };
 
-  const checkWordHandler = (row: rowType, keyboardControllerCopy) => {
+  const checkWordHandler = (
+    row: rowType,
+    keyboardControllerCopy: KeyboardControllerType
+  ) => {
     const winningWordArr = winningWord.split('');
     const gameStateInputCopy = [...row.input];
     // NEEDED FOR DEEP COPY OF STATE INPUT ????? not sure
@@ -147,7 +158,11 @@ const Main = () => {
     console.log('betwtte', gameStateInputCopy);
 
     //
-    gameStateInputCopy.forEach((el, index) => {
+    gameStateInputCopy.forEach((el) => {
+      console.log(
+        el,
+        'JJLKJLJLKJLKJKLJLKJLKJKLJKLJKLJLKJKLJLKJLKJLKJKLJLKJKLJLKJKLJLKJLKJLKJLKJLKJLKJLKJLKJLKJLK'
+      );
       if (winningWordArr.indexOf(el.input) !== -1) {
         el.inWinningWord = true;
         winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
@@ -156,6 +171,7 @@ const Main = () => {
         // inWinnigWordTest.push(winningWordArr.pop());
         keyboardControllerCopy.inWinningWord.push(el.input);
       } else {
+        keyboardControllerCopy.notInWinningWord.push(el.input);
         el.inWinningWord = false;
       }
     });

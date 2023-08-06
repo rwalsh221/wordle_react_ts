@@ -20,6 +20,11 @@
   color: var(--color-blue-dark);
 }
 
+.red {
+  background-color: var(--color-red-light);
+  color: var(--color-red-dark);
+}
+
 .init {
   background-color: rgb(128, 128, 138);
 }
