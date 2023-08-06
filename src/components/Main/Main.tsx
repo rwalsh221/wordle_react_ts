@@ -29,8 +29,12 @@ type KeyboardControllerType = {
   notInWinningWord: string[];
 };
 
+type GameRunningType = boolean;
+
 const Main = () => {
   console.log('RENDER');
+  // SET FALSE ON FAIL OR SUCCESS
+  const [gameRunning, setGameRunning] = useState<GameRunningType>(true);
   // GET FROM JSON FILE
   const [winningWord, setWinningWord] = useState('');
 
@@ -330,8 +334,6 @@ const Main = () => {
     }
   };
 
-  // SET FALSE ON FAIL OR SUCCESS
-  const [gameRunning, setGameRunning] = useState(true);
   return (
     <main
       className={classes.main}
