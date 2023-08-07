@@ -233,6 +233,20 @@ const Main = () => {
     // }
   };
 
+  const checkWinHandler = (inputArr: UserInputType[]) => {
+    let win = true;
+
+    for (let i = 0; i < inputArr.length; i++) {
+      if (!win) {
+        break;
+      }
+      if (!inputArr[i].inCorrectPlace) {
+        win = false;
+      }
+    }
+    return win;
+  };
+
   const validateKeyPressedHandler = (
     keyPressed: string | null,
     keyPressedCode: string
@@ -312,18 +326,36 @@ const Main = () => {
         gameStateCopy[key].input.length === 5
       ) {
         checkWordHandler(gameStateCopy[key], keyboardControllerCopy);
+
+        if (checkWinHandler(gameStateCopy[key].input)) {
+          // TODO: CREATE FUNC AS REPEATED BELOW
+          keyboardControllerCopy.notInWinningWord.push('x');
+          const gameRunningCopy: GameRunningType = { ...gameRunning };
+          gameRunningCopy.running = false;
+          gameRunningCopy.status = 'win';
+          setGameRunning({ ...gameRunningCopy });
+          return;
+        }
+
         gameStateCopy[key].status = 'inactive';
         if (index !== userInputKeys.length - 1) {
           gameStateCopy[userInputKeys[index + 1]].status = 'active';
         }
+
         // END GAME
         if (index === userInputKeys.length - 1) {
+          keyboardControllerCopy.notInWinningWord.push('x');
+          console.log(
+            keyboardController,
+            'GGHGHGHJGHGHGHGHGHGJHGHJGHJGHGHGHJGHJGJHGHJGHJGHJGHJGHJGHJGHJGHGJHGHJGJ'
+          );
           const gameRunningCopy: GameRunningType = { ...gameRunning };
           gameRunningCopy.running = false;
           gameRunningCopy.status = 'lose';
           setGameRunning({ ...gameRunningCopy });
           return;
         }
+        console.log('this this this this');
         keyPressed = null;
         reRender = true;
         return;
@@ -346,6 +378,9 @@ const Main = () => {
       }
     });
     if (reRender) {
+      console.log(
+        'RERERERERERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR'
+      );
       setGameState({ ...gameStateCopy });
       setKeyboardController({ ...keyboardControllerCopy });
     }

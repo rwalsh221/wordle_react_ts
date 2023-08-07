@@ -17,21 +17,6 @@ const GameBoard = ({
   gameStateProps,
   winningWordProps,
 }: GameBoardPropTypes) => {
-  // const renderGameSquare = () => {
-  //   const gameSquares = [];
-  //   for (let i = 0; i < 6; i++) {
-  //     for (let j = 0; j < 5; j++) {
-  //       if (userInputProps[i]?.[j]) {
-  //         gameSquares.push(<GameSquare rowProps={userInputProps[i][j]} />);
-  //       } else {
-  //         gameSquares.push(<GameSquare rowProps={'*'} />);
-  //       }
-  //     }
-  //   }
-  //   return gameSquares;
-  // };
-  // return <div className={classes.gameboard}>{renderGameSquare()}</div>;
-
   const renderGameSquare = () => {
     const gameSquares: React.ReactElement[] = [];
     const userInputPropsKeys = Object.keys(gameStateProps);
@@ -39,7 +24,6 @@ const GameBoard = ({
     // ADD NOT IN WORD KEY TO OBJ
     // FOR COMPLETE STATUS
     const gameSquareStyleHandler = (inputObj) => {
-      console.log('stlye', inputObj);
       let style: string;
       switch (true) {
         case inputObj.inWinningWord:
@@ -55,7 +39,7 @@ const GameBoard = ({
         default:
           style = 'init';
       }
-      console.log(style);
+
       return style;
     };
 

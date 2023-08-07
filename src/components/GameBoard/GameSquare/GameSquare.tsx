@@ -12,7 +12,6 @@ const GameSquare = ({
   checkStyleProps,
 }: GameSquareType) => {
   const style = 'gamesquare';
-  console.log(classes[style]);
 
   // console.log(rowProps);
   return (
