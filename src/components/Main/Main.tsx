@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import classes from './Main.module.css';
 import GameBoard from '../GameBoard/GameBoard';
 import Keyboard from '../Keyboard/Keyboard';
+import GameStatusModal from '../GameStatusModal/GameStatusModal';
 
 import type { GameStateType } from '../../types/types';
 
@@ -29,12 +30,24 @@ type KeyboardControllerType = {
   notInWinningWord: string[];
 };
 
-type GameRunningType = boolean;
+type GameRunningType = {
+  status: 'win' | 'lose' | 'init' | 'running';
+  running: boolean;
+};
 
 const Main = () => {
   console.log('RENDER');
   // SET FALSE ON FAIL OR SUCCESS
-  const [gameRunning, setGameRunning] = useState<GameRunningType>(true);
+  const [gameRunning, setGameRunning] = useState<GameRunningType>({
+    status: 'init',
+    running: false,
+  });
+
+  const gameRunningHandler = () => {
+    const gameRunningStateCopy = { ...gameRunning };
+    gameRunningStateCopy.running = true;
+    setGameRunning({ ...gameRunningStateCopy });
+  };
   // GET FROM JSON FILE
   const [winningWord, setWinningWord] = useState('');
 
@@ -122,7 +135,8 @@ const Main = () => {
   // TODO: press enter to check winning word - last item on array needs to be enter to continu  NEED REFACTOR
 
   // TODO: ADD POPUP WITH BASIC GAME RULES
-  // TODO: ADD STYLE FOR LETTERS NOT IN WORD ON KEYBOARD
+  // TODO: CHECK FOR WIN
+  // TODO: CREATE RESET GAMESTATE FUNC
 
   // const [userInput2, setUserInput2] = useState<string[][]>([]);
 
@@ -282,7 +296,7 @@ const Main = () => {
       return;
     }
 
-    if (!gameRunning) {
+    if (!gameRunning.running) {
       return;
     }
     // NEED TO CHNAGE TO FOR LOOP SO CAN USE BREAK AFTER 'ENTER'
@@ -304,7 +318,10 @@ const Main = () => {
         }
         // END GAME
         if (index === userInputKeys.length - 1) {
-          setGameRunning(false);
+          const gameRunningCopy: GameRunningType = { ...gameRunning };
+          gameRunningCopy.running = false;
+          gameRunningCopy.status = 'lose';
+          setGameRunning({ ...gameRunningCopy });
           return;
         }
         keyPressed = null;
@@ -342,7 +359,13 @@ const Main = () => {
         userInputHandler(event);
       }}
     >
-      <p>{gameRunning ? 'game is running' : 'game is not running'}</p>
+      <p>{gameRunning.running ? 'game is running' : 'game is not running'}</p>
+      {!gameRunning.running && (
+        <GameStatusModal
+          setGameRunningProps={gameRunningHandler}
+          gameStatusProps={gameRunning.status}
+        />
+      )}
       <GameBoard gameStateProps={gameState} winningWordProps={winningWord} />
       <Keyboard keyboardControllerProps={keyboardController}></Keyboard>
     </main>

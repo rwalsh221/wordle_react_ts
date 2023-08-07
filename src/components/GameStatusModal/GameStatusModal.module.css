@@ -1,1 +1,32 @@
-import
+.game_status_modal {
+  background-color: var(--color-red-light);
+  width: 40%;
+  height: 40%;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  border: 2px solid var(--color-red-dark);
+}
+
+.game_status_modal p {
+  color: var(--color-red-dark);
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.game_status_modal button {
+  display: block;
+  background-color: var(--color-green-light);
+  color: var(--color-green-dark);
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  border: 2px solid var(--color-green-dark);
+  margin: 5rem auto;
+}
+.game_status_modal button:hover {
+  border: 2px solid var(--color-blue-dark);
+  color: var(--color-blue-dark);
+  background-color: var(--color-blue-light);
+}
