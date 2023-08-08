@@ -1,7 +1,7 @@
 import classes from './GameStatusModal.module.css';
 
 type GameStatusModalPropTypes = {
-  setGameRunningProps: () => void;
+  setGameRunningProps: () => Promise<boolean>;
   gameStatusProps: 'win' | 'lose' | 'init' | 'running';
   winningWordProps: string;
 };
@@ -25,7 +25,7 @@ const GameStatusModal = ({
   return (
     <div className={classes.game_status_modal}>
       <p>{modalContentHandler()}</p>
-      <button type="button" onClick={setGameRunningProps}>
+      <button type="button" onClick={async () => await setGameRunningProps}>
         START
       </button>
     </div>

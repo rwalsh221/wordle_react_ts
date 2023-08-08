@@ -43,19 +43,8 @@ const Main = () => {
     running: false,
   });
 
-  const gameRunningHandler = () => {
-    const gameRunningStateCopy = { ...gameRunning };
-    gameRunningStateCopy.running = true;
-    if (
-      gameRunningStateCopy.status === 'win' ||
-      gameRunningStateCopy.status === 'lose'
-    ) {
-      resetGameHandler();
-    }
-    setGameRunning({ ...gameRunningStateCopy });
-  };
   // GET FROM JSON FILE
-  const [winningWord, setWinningWord] = useState('');
+  const [winningWord, setWinningWord] = useState<string | undefined>('');
 
   useEffect(() => {
     console.log('useffect');
@@ -224,6 +213,33 @@ const Main = () => {
     });
   };
 
+  const clearKeyboardHandler = () => {
+    const keyboardControllerCopy = { ...keyboardController };
+    const keyboardControllerCopyKeys = Object.keys(keyboardControllerCopy);
+
+    keyboardControllerCopyKeys.forEach((el) => {
+      while (keyboardControllerCopy[el].length) {
+        keyboardControllerCopy[el].pop();
+      }
+    });
+    setKeyboardController({ ...keyboardControllerCopy });
+  };
+
+  const getWinningWordHandler = async () => {
+    try {
+      const getWinningWord = await fetch('./src/json/words.json');
+      if (!getWinningWord.ok) {
+        throw new Error();
+      }
+      const winningWordArr: string[] = (await getWinningWord.json()) as [];
+      console.log(winningWordArr);
+      // const test = winningWord;
+      return winningWordArr[Math.floor(Math.random() * winningWordArr.length)];
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const validateKeyPressedHandler = (
     keyPressed: string | null,
     keyPressedCode: string
@@ -347,6 +363,22 @@ const Main = () => {
       setGameState({ ...gameStateCopy });
       setKeyboardController({ ...keyboardControllerCopy });
     }
+  };
+
+  const gameRunningHandler = async (): Promise<boolean> => {
+    const gameRunningStateCopy = { ...gameRunning };
+    gameRunningStateCopy.running = true;
+    if (
+      gameRunningStateCopy.status === 'win' ||
+      gameRunningStateCopy.status === 'lose'
+    ) {
+      resetGameHandler();
+      clearKeyboardHandler();
+    }
+    const winningWord = await getWinningWordHandler();
+    setWinningWord(winningWord);
+    setGameRunning({ ...gameRunningStateCopy });
+    return true;
   };
 
   return (
