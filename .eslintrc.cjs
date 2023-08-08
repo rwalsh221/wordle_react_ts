@@ -23,5 +23,10 @@ module.exports = {
       { allowConstantExport: true },
     ],
     '@typescript-eslint/no-non-null-assertion': 'off',
+    // https://stackoverflow.com/questions/72149756/async-function-passed-as-prop-into-react-component-causing-typescript-eslint-no
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      { checksVoidReturn: { attributes: false } },
+    ],
   },
-}
+};

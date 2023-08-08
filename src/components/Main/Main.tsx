@@ -365,7 +365,7 @@ const Main = () => {
     }
   };
 
-  const gameRunningHandler = async (): Promise<boolean> => {
+  const gameRunningHandler = async () => {
     const gameRunningStateCopy = { ...gameRunning };
     gameRunningStateCopy.running = true;
     if (
@@ -378,7 +378,6 @@ const Main = () => {
     const winningWord = await getWinningWordHandler();
     setWinningWord(winningWord);
     setGameRunning({ ...gameRunningStateCopy });
-    return true;
   };
 
   return (
