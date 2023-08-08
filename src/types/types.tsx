@@ -16,7 +16,5 @@ export type GameStateType = {
   [key: string]: {
     status: GameStateStatus;
     input: UserInputType[];
-    inWinningWord: string[];
-    inCorrectPlace: string[];
   };
 };

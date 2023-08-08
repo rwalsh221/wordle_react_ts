@@ -46,6 +46,12 @@ const Main = () => {
   const gameRunningHandler = () => {
     const gameRunningStateCopy = { ...gameRunning };
     gameRunningStateCopy.running = true;
+    if (
+      gameRunningStateCopy.status === 'win' ||
+      gameRunningStateCopy.status === 'lose'
+    ) {
+      resetGameHandler();
+    }
     setGameRunning({ ...gameRunningStateCopy });
   };
   // GET FROM JSON FILE
@@ -88,38 +94,26 @@ const Main = () => {
     row1: {
       status: 'active',
       input: [],
-      inWinningWord: [],
-      inCorrectPlace: [],
     },
     row2: {
       status: 'inactive',
       input: [],
-      inWinningWord: [],
-      inCorrectPlace: [],
     },
     row3: {
       status: 'inactive',
       input: [],
-      inWinningWord: [],
-      inCorrectPlace: [],
     },
     row4: {
       status: 'inactive',
       input: [],
-      inWinningWord: [],
-      inCorrectPlace: [],
     },
     row5: {
       status: 'inactive',
       input: [],
-      inWinningWord: [],
-      inCorrectPlace: [],
     },
     row6: {
       status: 'inactive',
       input: [],
-      inWinningWord: [],
-      inCorrectPlace: [],
     },
   });
 
@@ -189,44 +183,6 @@ const Main = () => {
         el.inWinningWord = false;
       }
     });
-    //
-
-    // while (gameStateInputCopy.length) {
-    //   console.log('while //////////////////////////////////////////////');
-    //   console.log(winningWordArr);
-    //   console.log(winningWordArr[winningWordArr.length - 1]);
-    //   console.log(gameStateInputCopy[winningWordArr.length - 1].input);
-    //   console.log(
-    //     winningWordArr.indexOf(
-    //       gameStateInputCopy[winningWordArr.length - 1].input
-    //     )
-    //   );
-    //   console.log('while //////////////////////////////////////////////');
-
-    //   if (
-    //     winningWordArr.indexOf(
-    //       gameStateInputCopy[winningWordArr.length - 1].input
-    //     ) !== -1
-    //   ) {
-    //     console.log(
-    //       'true inword',
-    //       gameStateInputCopy[winningWordArr.length - 1]
-    //     );
-    //     gameStateInputCopy[winningWordArr.length - 1].inWinningWord = true;
-    //     gameStateInputCopy.splice(
-    //       gameStateInputCopy.indexOf(
-    //         winningWordArr[winningWordArr.length - 1],
-    //         1
-    //       )
-    //     );
-
-    //     inWinnigWordTest.push(winningWordArr.pop());
-    //   } else {
-    //     console.log('12212', gameStateInputCopy[winningWordArr.length - 1]);
-    //     gameStateInputCopy[winningWordArr.length - 1].inWinningWord = false;
-    //     winningWordArr.pop();
-    //   }
-    // }
   };
 
   const checkWinHandler = (inputArr: UserInputType[]) => {
@@ -250,6 +206,22 @@ const Main = () => {
     gameRunningCopy.status = winLose;
     setGameRunning({ ...gameRunningCopy });
     return;
+  };
+
+  const resetGameHandler = () => {
+    // TODO: need to reste keyboard and get new Word
+    const gameStateCopy = { ...gameState };
+    const gameStateCopyKeys = Object.keys(gameStateCopy);
+    gameStateCopyKeys.forEach((el, index) => {
+      while (gameStateCopy[el].input.length) {
+        gameStateCopy[el].input.pop();
+      }
+      if (index === 0) {
+        gameStateCopy[el].status = 'active';
+      } else {
+        gameStateCopy[el].status = 'inactive';
+      }
+    });
   };
 
   const validateKeyPressedHandler = (
