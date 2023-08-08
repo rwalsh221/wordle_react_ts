@@ -3,19 +3,21 @@ import classes from './GameStatusModal.module.css';
 type GameStatusModalPropTypes = {
   setGameRunningProps: () => void;
   gameStatusProps: 'win' | 'lose' | 'init' | 'running';
+  winningWordProps: string;
 };
 
 const GameStatusModal = ({
   setGameRunningProps,
   gameStatusProps,
+  winningWordProps,
 }: GameStatusModalPropTypes) => {
   const modalContentHandler = () => {
     let content = 'HELLO!, Please press start to play the game';
     if (gameStatusProps === 'win') {
-      content = 'CONGRATULATIONS!, Please press start to play the game';
+      content = `CONGRATULATIONS! the correct word was ${winningWordProps.toUpperCase()}, Please press start to play again`;
     }
     if (gameStatusProps === 'lose') {
-      content = 'BAD LUCK!, Please press start to play the game';
+      content = 'BAD LUCK!, Please press start to play again';
     }
     return content;
   };

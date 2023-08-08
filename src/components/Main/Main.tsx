@@ -177,10 +177,6 @@ const Main = () => {
 
     //
     gameStateInputCopy.forEach((el) => {
-      console.log(
-        el,
-        'JJLKJLJLKJLKJKLJLKJLKJKLJKLJKLJLKJKLJLKJLKJLKJKLJLKJKLJLKJKLJLKJLKJLKJLKJLKJLKJLKJLKJLKJLK'
-      );
       if (winningWordArr.indexOf(el.input) !== -1) {
         el.inWinningWord = true;
         winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
@@ -247,6 +243,15 @@ const Main = () => {
     return win;
   };
 
+  const endGameHandler = (winLose: 'win' | 'lose') => {
+    const gameRunningCopy: GameRunningType = { ...gameRunning };
+
+    gameRunningCopy.running = false;
+    gameRunningCopy.status = winLose;
+    setGameRunning({ ...gameRunningCopy });
+    return;
+  };
+
   const validateKeyPressedHandler = (
     keyPressed: string | null,
     keyPressedCode: string
@@ -292,6 +297,8 @@ const Main = () => {
     return false;
   };
 
+  // TODO: NEED TO MAKE DEEP COPY OF STATE
+
   const userInputHandler = (event: React.KeyboardEvent) => {
     const inputKey: InputKey = {
       backSpace: 'Backspace',
@@ -327,35 +334,22 @@ const Main = () => {
       ) {
         checkWordHandler(gameStateCopy[key], keyboardControllerCopy);
 
-        if (checkWinHandler(gameStateCopy[key].input)) {
-          // TODO: CREATE FUNC AS REPEATED BELOW
-          keyboardControllerCopy.notInWinningWord.push('x');
-          const gameRunningCopy: GameRunningType = { ...gameRunning };
-          gameRunningCopy.running = false;
-          gameRunningCopy.status = 'win';
-          setGameRunning({ ...gameRunningCopy });
-          return;
-        }
-
         gameStateCopy[key].status = 'inactive';
         if (index !== userInputKeys.length - 1) {
           gameStateCopy[userInputKeys[index + 1]].status = 'active';
         }
 
-        // END GAME
-        if (index === userInputKeys.length - 1) {
-          keyboardControllerCopy.notInWinningWord.push('x');
-          console.log(
-            keyboardController,
-            'GGHGHGHJGHGHGHGHGHGJHGHJGHJGHGHGHJGHJGJHGHJGHJGHJGHJGHJGHJGHJGHGJHGHJGJ'
-          );
-          const gameRunningCopy: GameRunningType = { ...gameRunning };
-          gameRunningCopy.running = false;
-          gameRunningCopy.status = 'lose';
-          setGameRunning({ ...gameRunningCopy });
+        if (checkWinHandler(gameStateCopy[key].input)) {
+          // TODO: CREATE FUNC AS REPEATED BELOW
+
+          endGameHandler('win');
           return;
         }
-        console.log('this this this this');
+
+        // END GAME
+        if (index === userInputKeys.length - 1) {
+          endGameHandler('lose');
+        }
         keyPressed = null;
         reRender = true;
         return;
@@ -378,9 +372,6 @@ const Main = () => {
       }
     });
     if (reRender) {
-      console.log(
-        'RERERERERERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR'
-      );
       setGameState({ ...gameStateCopy });
       setKeyboardController({ ...keyboardControllerCopy });
     }
@@ -399,6 +390,7 @@ const Main = () => {
         <GameStatusModal
           setGameRunningProps={gameRunningHandler}
           gameStatusProps={gameRunning.status}
+          winningWordProps={winningWord}
         />
       )}
       <GameBoard gameStateProps={gameState} winningWordProps={winningWord} />

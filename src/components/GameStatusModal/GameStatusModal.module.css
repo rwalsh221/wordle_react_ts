@@ -1,7 +1,7 @@
 .game_status_modal {
   background-color: var(--color-red-light);
   width: 40%;
-  height: 40%;
+  height: max-content;
   position: fixed;
   left: 50%;
   top: 50%;
@@ -29,4 +29,8 @@
   border: 2px solid var(--color-blue-dark);
   color: var(--color-blue-dark);
   background-color: var(--color-blue-light);
+}
+
+.modal_winning_word {
+  text-transform: uppercase;
 }
