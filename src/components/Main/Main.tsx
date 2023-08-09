@@ -4,7 +4,7 @@ import GameBoard from '../GameBoard/GameBoard';
 import Keyboard from '../Keyboard/Keyboard';
 import GameStatusModal from '../GameStatusModal/GameStatusModal';
 
-import type { GameStateType } from '../../types/types';
+import type { GameStateType, GameStateStatus } from '../../types/types';
 
 type UserInputType = {
   input: string;
@@ -12,11 +12,9 @@ type UserInputType = {
   inCorrectPlace: boolean | null;
 };
 
-type rowType = {
-  active: boolean;
-  input: string[];
-  inWinningWord: string[];
-  inCorrectPlace: string[];
+type RowType = {
+  status: GameStateStatus;
+  input: UserInputType[];
 };
 
 type InputKey = {
@@ -36,7 +34,9 @@ type GameRunningType = {
 };
 
 const Main = () => {
-  console.log('RENDER');
+  // TODO: DEEP COPY STATE OBJ
+  // STATE START
+
   // SET FALSE ON FAIL OR SUCCESS
   const [gameRunning, setGameRunning] = useState<GameRunningType>({
     status: 'init',
@@ -44,40 +44,7 @@ const Main = () => {
   });
 
   // GET FROM JSON FILE
-  const [winningWord, setWinningWord] = useState<string | undefined>('');
-
-  useEffect(() => {
-    console.log('useffect');
-    // VOID STATEMENT TO IGNORE NO_FLOATING_PROMISES ESLINT FOR BELOW ASYNC FUNCTION
-    // https://github.com/typescript-eslint/typescript-eslint/issues/2569
-    void (async () => {
-      try {
-        const getWinningWord = await fetch('./src/json/words.json');
-        if (!getWinningWord.ok) {
-          throw new Error();
-        }
-        const winningWordArr: string[] = (await getWinningWord.json()) as [];
-        console.log(winningWordArr);
-        // const test = winningWord;
-        setWinningWord(
-          winningWordArr[Math.floor(Math.random() * winningWordArr.length)]
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
-
-  console.log(winningWord);
-
-  // 1, for each throgh obj.keys to geneertate game squares
-  // CAN USE ACTIVE KEY TO PREVENT UNESSCERAY RERENDER
-
-  // 2, after 'ENTER' check input against winnnig word and fill inWinngingword and inCorrectPlace
-
-  // 3, style game square based on inWinningWord and inCorrectPlace
-
-  // 4, user inWinninngWord and inCorrectPlace to style keyboard or seperate to prevent additonal loop throgh all keys
+  const [winningWord, setWinningWord] = useState<string>('');
 
   const [gameState, setGameState] = useState<GameStateType>({
     row1: {
@@ -106,8 +73,6 @@ const Main = () => {
     },
   });
 
-  console.log(gameState);
-
   const [keyboardController, setKeyboardController] =
     useState<KeyboardControllerType>({
       inCorrectPlace: [],
@@ -115,57 +80,43 @@ const Main = () => {
       notInWinningWord: [],
     });
 
-  // TODO: press enter to check winning word - last item on array needs to be enter to continu  NEED REFACTOR
-
-  // TODO: ADD POPUP WITH BASIC GAME RULES
-  // TODO: CHECK FOR WIN
-  // TODO: CREATE RESET GAMESTATE FUNC
-
-  // const [userInput2, setUserInput2] = useState<string[][]>([]);
+  // STATE END
 
   const deleteHandler = (inputArr: UserInputType[]) => {
     inputArr.pop();
   };
 
   const checkWordHandler = (
-    row: rowType,
+    activeRow: RowType,
     keyboardControllerCopy: KeyboardControllerType
   ) => {
     const winningWordArr = winningWord.split('');
-    const gameStateInputCopy = [...row.input];
+    const gameStateInputCopy = [...activeRow.input]; // DONT NEED COPY
+
     // NEEDED FOR DEEP COPY OF STATE INPUT ????? not sure
     // row.input.forEach((el) => {
     //   console.log(el);
     //   gameStateInputCopy.push(structuredClone(el));
     // });
 
-    const inWinnigWordTest = [];
-    const inCorrectPlaceTest = [];
-
+    // CHECK IF USER INPUT IS IN CORRECT PLACE IN WINNING WORD
     for (let i = winningWordArr.length - 1; i >= 0; i--) {
-      console.log(winningWordArr[i]);
       if (winningWordArr[i] === gameStateInputCopy[i].input) {
         keyboardControllerCopy.inCorrectPlace.push(winningWordArr[i]);
-        console.log(true, winningWordArr[i], gameStateInputCopy[i]);
-        inCorrectPlaceTest.push(winningWordArr.splice(i, 1));
+
         gameStateInputCopy[i].inWinningWord = false;
         gameStateInputCopy[i].inCorrectPlace = true;
         gameStateInputCopy.splice(i, 1);
       } else {
-        console.log(false, winningWordArr[i], gameStateInputCopy[i]);
         gameStateInputCopy[i].inCorrectPlace = false;
       }
     }
-    console.log('betwtte', gameStateInputCopy);
 
-    //
+    // CHECK IF USER INPUT IS IN WINNING WORD BUT NOT CORRECT PLACE
     gameStateInputCopy.forEach((el) => {
       if (winningWordArr.indexOf(el.input) !== -1) {
         el.inWinningWord = true;
         winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
-        // gameStateInputCopy.splice(index, 1);
-
-        // inWinnigWordTest.push(winningWordArr.pop());
         keyboardControllerCopy.inWinningWord.push(el.input);
       } else {
         keyboardControllerCopy.notInWinningWord.push(el.input);
@@ -189,7 +140,7 @@ const Main = () => {
   };
 
   const endGameHandler = (winLose: 'win' | 'lose') => {
-    const gameRunningCopy: GameRunningType = { ...gameRunning };
+    const gameRunningCopy = { ...gameRunning };
 
     gameRunningCopy.running = false;
     gameRunningCopy.status = winLose;
@@ -198,7 +149,6 @@ const Main = () => {
   };
 
   const resetGameHandler = () => {
-    // TODO: need to reste keyboard and get new Word
     const gameStateCopy = { ...gameState };
     const gameStateCopyKeys = Object.keys(gameStateCopy);
     gameStateCopyKeys.forEach((el, index) => {
@@ -214,8 +164,11 @@ const Main = () => {
   };
 
   const clearKeyboardHandler = () => {
+    // https://stackoverflow.com/questions/69479640/typescript-error-no-index-signature-with-a-parameter-of-type-string-was-found  Array<keyof KeyboardControllerType>
     const keyboardControllerCopy = { ...keyboardController };
-    const keyboardControllerCopyKeys = Object.keys(keyboardControllerCopy);
+    const keyboardControllerCopyKeys = Object.keys(
+      keyboardControllerCopy
+    ) as Array<keyof KeyboardControllerType>;
 
     keyboardControllerCopyKeys.forEach((el) => {
       while (keyboardControllerCopy[el].length) {
@@ -232,8 +185,7 @@ const Main = () => {
         throw new Error();
       }
       const winningWordArr: string[] = (await getWinningWord.json()) as [];
-      console.log(winningWordArr);
-      // const test = winningWord;
+
       return winningWordArr[Math.floor(Math.random() * winningWordArr.length)];
     } catch (error) {
       console.error(error);
@@ -285,8 +237,6 @@ const Main = () => {
     return false;
   };
 
-  // TODO: NEED TO MAKE DEEP COPY OF STATE
-
   const userInputHandler = (event: React.KeyboardEvent) => {
     const inputKey: InputKey = {
       backSpace: 'Backspace',
@@ -308,7 +258,6 @@ const Main = () => {
     if (!gameRunning.running) {
       return;
     }
-    // NEED TO CHNAGE TO FOR LOOP SO CAN USE BREAK AFTER 'ENTER'
     userInputKeys.forEach((key, index) => {
       // MOVES TO NEXT ITEM IN KEY IF STATUS IS INACTIVE
       if (gameStateCopy[key].status === 'inactive' || keyPressed === null) {
@@ -320,6 +269,7 @@ const Main = () => {
         keyPressed === inputKey.enter &&
         gameStateCopy[key].input.length === 5
       ) {
+        console.log(gameStateCopy[key]);
         checkWordHandler(gameStateCopy[key], keyboardControllerCopy);
 
         gameStateCopy[key].status = 'inactive';
@@ -376,7 +326,7 @@ const Main = () => {
       clearKeyboardHandler();
     }
     const winningWord = await getWinningWordHandler();
-    setWinningWord(winningWord);
+    setWinningWord(winningWord!);
     setGameRunning({ ...gameRunningStateCopy });
   };
 
