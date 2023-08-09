@@ -4,13 +4,11 @@ import GameBoard from '../GameBoard/GameBoard';
 import Keyboard from '../Keyboard/Keyboard';
 import GameStatusModal from '../GameStatusModal/GameStatusModal';
 
-import type { GameStateType, GameStateStatus } from '../../types/types';
-
-type UserInputType = {
-  input: string;
-  inWinningWord: boolean | null;
-  inCorrectPlace: boolean | null;
-};
+import type {
+  GameStateType,
+  GameStateStatus,
+  UserInputType,
+} from '../../types/types';
 
 type RowType = {
   status: GameStateStatus;

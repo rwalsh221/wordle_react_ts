@@ -6,7 +6,7 @@ export type GameStateStatus =
 
 // export type Test = boolean;
 
-type UserInputType = {
+export type UserInputType = {
   input: string;
   inWinningWord: boolean | null;
   inCorrectPlace: boolean | null;

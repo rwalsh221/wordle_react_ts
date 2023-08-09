@@ -1,66 +1,46 @@
 .gamesquare {
   user-select: none;
-  /* pointer-events: none; */
   font-size: 2rem;
   border: var(--border-grey);
-  /* padding: 1rem; */
   width: var(--game-square-size);
   height: var(--game-square-size);
   text-align: center;
-  /* vertical-align: text-bottom; */
   line-height: var(--game-square-size);
-  /* box-shadow: 2px 2px 2px black inset; */
-  /* background-color: lavender; */
   text-transform: capitalize;
   font-weight: bold;
 }
 
 .gamesquare_check_win {
-  animation: test2 1.5s ease both;
+  animation: checkWin 1.5s ease both;
 }
 
-/* .gamesquare::before {
-  height: 100%;
-  width: 100%;
-  background-color: hotpink;
-  z-index: -200;
-  content: '';
-  display: block;
-  transform: translateX(10px);
-  position: relative;
-} */
-
-.red {
+.input__not_in_word {
   --animation-bg-color: var(--color-red-light);
   --animation-font-color: var(--color-red-dark);
   color: var(--animation-font-color);
-  animation: test2 1.5s ease both;
+  animation: checkWin 1.5s ease both;
 }
 
-.green {
+.input__in_correct_place {
   --animation-font-color: var(--color-green-dark);
   --animation-bg-color: var(--color-green-light);
-  /* border: 2px solid var(--animation-font-color); */
   color: var(--animation-font-color);
-  /* animation: test 1s ease-in forwards; */
-  animation: test2 1.5s ease both;
+  animation: checkWin 1.5s ease both;
 }
 
-@keyframes test {
-  0% {
-    color: black;
-  }
-
-  99% {
-    color: black;
-  }
-
-  100% {
-    color: initial;
-  }
+.input__in_word {
+  --animation-font-color: var(--color-blue-dark);
+  --animation-bg-color: var(--color-blue-light);
+  animation: checkWin 1.5s ease both;
+  color: var(--animation-font-color);
 }
 
-@keyframes test2 {
+.input__init {
+  --animation-font-color: black;
+  color: var(--animation-font-color);
+}
+
+@keyframes checkWin {
   0% {
     color: black;
     background-color: initial;
@@ -75,16 +55,4 @@
     color: var(--animation-font-color);
     background-color: var(--animation-bg-color);
   }
-}
-
-.blue {
-  --animation-font-color: var(--color-blue-dark);
-  --animation-bg-color: var(--color-blue-light);
-  animation: test2 1.5s ease both;
-  color: var(--animation-font-color);
-}
-
-.init {
-  --animation-font-color: black;
-  color: var(--animation-font-color);
 }

@@ -2,51 +2,39 @@ import React from 'react';
 import classes from './GameBoard.module.css';
 import GameSquare from './GameSquare/GameSquare';
 
-import { GameStateType } from '../../types/types';
-
-// type GameBoardType = {
-//   userInputProps: string[][];
-// };
+import { GameStateType, UserInputType } from '../../types/types';
 
 type GameBoardPropTypes = {
   gameStateProps: GameStateType;
   winningWordProps: string;
 };
 
-const GameBoard = ({
-  gameStateProps,
-  winningWordProps,
-}: GameBoardPropTypes) => {
+const GameBoard = ({ gameStateProps }: GameBoardPropTypes) => {
   const renderGameSquare = () => {
     const gameSquares: React.ReactElement[] = [];
     const userInputPropsKeys = Object.keys(gameStateProps);
 
-    // ADD NOT IN WORD KEY TO OBJ
-    // FOR COMPLETE STATUS
-    const gameSquareStyleHandler = (inputObj) => {
+    const gameSquareStyleHandler = (inputObj: UserInputType) => {
       let style: string;
       switch (true) {
         case inputObj.inWinningWord:
-          style = 'blue';
+          style = 'input__in_word';
           console.log(style);
           break;
         case inputObj.inCorrectPlace:
-          style = 'green';
+          style = 'input__in_correct_place';
           break;
-        case !inputObj.inCorrectPlace && !inputObj.inWinningword:
-          style = 'red';
+        case !inputObj.inCorrectPlace && !inputObj.inWinningWord:
+          style = 'input__not_in_word';
           break;
         default:
-          style = 'init';
+          style = 'input__init';
       }
 
       return style;
     };
 
     userInputPropsKeys.forEach((key) => {
-      const copyGuess = [...gameStateProps[key].input];
-      const winningWordArr = winningWordProps.split('');
-
       for (let i = 0; i < 5; i++) {
         if (
           gameStateProps[key].input[i] &&
@@ -56,13 +44,10 @@ const GameBoard = ({
             <GameSquare
               key={`${key}${i}`}
               rowProps={gameStateProps[key].input[i].input}
-              styleProps="init"
-              // checkStyleProps="gamesquare_check_win"
+              styleProps="input__init"
             />
           );
         } else if (gameStateProps[key].input[i]) {
-          // compare guess to win
-
           gameSquares.push(
             <GameSquare
               key={`${key}${i}`}
