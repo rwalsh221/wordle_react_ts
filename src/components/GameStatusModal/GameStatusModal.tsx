@@ -12,19 +12,41 @@ const GameStatusModal = ({
   winningWordProps,
 }: GameStatusModalPropTypes) => {
   const modalContentHandler = () => {
-    let content = 'HELLO!, Please press start to play the game';
+    const message = {
+      init: 'HELLO!, Please press start to play the game',
+      win: `CONGRATULATIONS! the correct word was ${winningWordProps.toUpperCase()}, Please press start to play again`,
+      lose: 'BAD LUCK!, Please press start to play again',
+    } as const;
+
+    const style = {
+      init: 'game_status_modal_no_animation',
+      winLose: 'game_status_modal_animation',
+    } as const;
+
+    const content: {
+      message: (typeof message)[keyof typeof message];
+      style: (typeof style)[keyof typeof style];
+    } = {
+      message: message.init,
+      style: style.init,
+    };
+
     if (gameStatusProps === 'win') {
-      content = `CONGRATULATIONS! the correct word was ${winningWordProps.toUpperCase()}, Please press start to play again`;
+      content.message = message.win;
+      content.style = style.winLose;
     }
     if (gameStatusProps === 'lose') {
-      content = 'BAD LUCK!, Please press start to play again';
+      content.message = message.lose;
+      content.style = style.winLose;
     }
     return content;
   };
 
+  const content = modalContentHandler();
+
   return (
-    <div className={classes.game_status_modal}>
-      <p>{modalContentHandler()}</p>
+    <div className={`${classes.game_status_modal} ${classes[content.style]}`}>
+      <p>{modalContentHandler().message}</p>
       <button type="button" onClick={setGameRunningProps}>
         START
       </button>

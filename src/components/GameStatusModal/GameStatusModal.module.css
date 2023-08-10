@@ -10,6 +10,14 @@
   border: 2px solid var(--color-red-dark);
 }
 
+.game_status_modal_animation {
+  animation: showModal 2s cubic-bezier(1, 0.03, 1, -0.06);
+}
+
+.game_status_modal_no_animation {
+  animation: none;
+}
+
 .game_status_modal p {
   color: var(--color-red-dark);
   font-size: 1.5rem;
@@ -33,4 +41,14 @@
 
 .modal_winning_word {
   text-transform: uppercase;
+}
+
+@keyframes showModal {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 100;
+  }
 }

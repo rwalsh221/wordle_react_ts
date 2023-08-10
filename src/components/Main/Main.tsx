@@ -28,10 +28,9 @@ type GameRunningType = {
 
 const Main = () => {
   // TODO: DEEP COPY STATE OBJ
-  // TODO: test LLLLL
+
   // STATE START
 
-  // SET FALSE ON FAIL OR SUCCESS
   const [gameRunning, setGameRunning] = useState<GameRunningType>({
     status: 'init',
     running: false,
