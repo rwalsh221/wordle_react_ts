@@ -1,7 +1,13 @@
 import classes from './Keyboard.module.css';
 import Key from './Key/Key';
 
-const Keyboard = ({ keyboardControllerProps }) => {
+import type { KeyboardControllerType } from '../../types/types';
+
+type KeyboardPropTypes = {
+  keyboardControllerProps: KeyboardControllerType;
+};
+
+const Keyboard = ({ keyboardControllerProps }: KeyboardPropTypes) => {
   return (
     <div className={classes.keyboard}>
       <div className={classes.keyboard_top_container}>

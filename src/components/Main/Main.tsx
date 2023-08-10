@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import classes from './Main.module.css';
 import GameBoard from '../GameBoard/GameBoard';
 import Keyboard from '../Keyboard/Keyboard';
@@ -8,6 +8,7 @@ import type {
   GameStateType,
   GameStateStatus,
   UserInputType,
+  KeyboardControllerType,
 } from '../../types/types';
 
 type RowType = {
@@ -20,12 +21,6 @@ type InputKey = {
   enter: 'Enter';
 };
 
-type KeyboardControllerType = {
-  inCorrectPlace: string[];
-  inWinningWord: string[];
-  notInWinningWord: string[];
-};
-
 type GameRunningType = {
   status: 'win' | 'lose' | 'init' | 'running';
   running: boolean;
@@ -33,6 +28,7 @@ type GameRunningType = {
 
 const Main = () => {
   // TODO: DEEP COPY STATE OBJ
+  // TODO: test LLLLL
   // STATE START
 
   // SET FALSE ON FAIL OR SUCCESS
@@ -105,6 +101,8 @@ const Main = () => {
         gameStateInputCopy[i].inWinningWord = false;
         gameStateInputCopy[i].inCorrectPlace = true;
         gameStateInputCopy.splice(i, 1);
+
+        winningWordArr.splice(i, 1);
       } else {
         gameStateInputCopy[i].inCorrectPlace = false;
       }

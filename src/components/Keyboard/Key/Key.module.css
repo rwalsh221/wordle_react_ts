@@ -10,17 +10,17 @@
   border-radius: 0.5rem;
 }
 
-.green {
+.input__in_correct_place {
   background-color: var(--color-green-light);
   color: var(--color-green-dark);
 }
 
-.blue {
+.input__in_word {
   background-color: var(--color-blue-light);
   color: var(--color-blue-dark);
 }
 
-.red {
+.input__not_in_word {
   background-color: var(--color-red-light);
   color: var(--color-red-dark);
 }

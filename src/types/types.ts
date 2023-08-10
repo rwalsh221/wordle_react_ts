@@ -18,3 +18,9 @@ export type GameStateType = {
     input: UserInputType[];
   };
 };
+
+export type KeyboardControllerType = {
+  inCorrectPlace: string[];
+  inWinningWord: string[];
+  notInWinningWord: string[];
+};
