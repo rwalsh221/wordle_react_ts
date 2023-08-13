@@ -32,7 +32,14 @@
   border-radius: 10px;
   border: 2px solid var(--color-green-dark);
   margin: 5rem auto;
+
+  /* overflow: hidden; */
 }
+
+.game_status_modal button:focus {
+  outline: lightblue solid 2px;
+}
+
 .game_status_modal button:hover {
   border: 2px solid var(--color-blue-dark);
   color: var(--color-blue-dark);

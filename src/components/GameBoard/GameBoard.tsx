@@ -19,7 +19,6 @@ const GameBoard = ({ gameStateProps }: GameBoardPropTypes) => {
       switch (true) {
         case inputObj.inWinningWord:
           style = 'input__in_word';
-          console.log(style);
           break;
         case inputObj.inCorrectPlace:
           style = 'input__in_correct_place';
