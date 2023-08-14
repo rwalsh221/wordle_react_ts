@@ -28,6 +28,7 @@ type GameRunningType = {
 
 const Main = () => {
   // TODO: DEEP COPY STATE OBJ
+  // TODO: ADD FUNC TO BTN FOR CLICK INPUT
 
   // STATE START
 
@@ -183,7 +184,7 @@ const Main = () => {
   };
 
   const userInputHandler = useCallback(
-    (event: KeyboardEvent) => {
+    (userInput: string) => {
       const endGameHandler = (winLose: 'win' | 'lose') => {
         const gameRunningCopy = { ...gameRunning };
 
@@ -239,17 +240,12 @@ const Main = () => {
         enter: 'Enter',
       };
 
-      const keyPressedCode: string | null = event.code;
       const userInputKeys = Object.keys(gameState);
       const gameStateCopy = { ...gameState };
       const keyboardControllerCopy = { ...keyboardController };
 
-      let keyPressed: string | null = event.key;
+      let keyPressed: string | null = userInput;
       let reRender = false;
-
-      if (!validateKeyPressedHandler(keyPressed, keyPressedCode)) {
-        return;
-      }
 
       if (!gameRunning.running) {
         return;
@@ -309,6 +305,23 @@ const Main = () => {
     [gameState, gameRunning, keyboardController, winningWord]
   );
 
+  const userKeyboardInputHandler = useCallback(
+    (event: KeyboardEvent) => {
+      const keyPressedCode: string = event.code;
+      const keyPressed: string = event.key;
+
+      if (!validateKeyPressedHandler(keyPressed, keyPressedCode)) {
+        return;
+      }
+      userInputHandler(keyPressed);
+    },
+    [userInputHandler]
+  );
+
+  const UIKeyboardInputHandler = (UIKeyboardClick: string) => {
+    return userInputHandler(UIKeyboardClick);
+  };
+
   const gameRunningHandler = async () => {
     const gameRunningStateCopy = { ...gameRunning };
     gameRunningStateCopy.running = true;
@@ -325,11 +338,11 @@ const Main = () => {
   };
 
   useEffect(() => {
-    document.addEventListener('keydown', userInputHandler);
+    document.addEventListener('keydown', userKeyboardInputHandler);
     return function cleanUp() {
-      document.removeEventListener('keydown', userInputHandler);
+      document.removeEventListener('keydown', userKeyboardInputHandler);
     };
-  }, [userInputHandler]);
+  }, [userKeyboardInputHandler]);
 
   return (
     <main className={classes.main}>
@@ -341,7 +354,10 @@ const Main = () => {
         />
       )}
       <GameBoard gameStateProps={gameState} winningWordProps={winningWord} />
-      <Keyboard keyboardControllerProps={keyboardController}></Keyboard>
+      <Keyboard
+        keyboardControllerProps={keyboardController}
+        keyboardClickHandlerProps={UIKeyboardInputHandler}
+      ></Keyboard>
     </main>
   );
 };

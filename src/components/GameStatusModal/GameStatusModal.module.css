@@ -8,6 +8,7 @@
   transform: translate(-50%, -50%);
   border-radius: 10px;
   border: 2px solid var(--color-red-dark);
+  /* display: none; */
 }
 
 .game_status_modal_animation {
@@ -15,6 +16,7 @@
 }
 
 .game_status_modal_no_animation {
+  display: block;
   animation: none;
 }
 
@@ -52,6 +54,7 @@
 
 @keyframes showModal {
   0% {
+    display: block;
     opacity: 0;
   }
 

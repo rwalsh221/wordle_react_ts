@@ -5,9 +5,16 @@ import type { KeyboardControllerType } from '../../../types/types';
 type KeyProps = {
   keyIconProps: string;
   keyboardControllerProps: KeyboardControllerType;
+  keyboardClickHandlerProps: (arg0: string) => void;
+  keyboardClickInputProps?: string;
 };
 
-const Key = ({ keyIconProps, keyboardControllerProps }: KeyProps) => {
+const Key = ({
+  keyIconProps,
+  keyboardControllerProps,
+  keyboardClickHandlerProps,
+  keyboardClickInputProps,
+}: KeyProps) => {
   const keyStyleHandler = () => {
     if (keyboardControllerProps.inCorrectPlace.indexOf(keyIconProps) !== -1) {
       return 'input__in_correct_place';
@@ -24,9 +31,16 @@ const Key = ({ keyIconProps, keyboardControllerProps }: KeyProps) => {
     }
   };
 
+  const userInput = keyboardClickInputProps
+    ? keyboardClickInputProps
+    : keyIconProps;
+
   return (
-    <div className={`${classes.key} ${classes[keyStyleHandler()]}`}>
-      {keyIconProps}
+    <div
+      className={`${classes.key} ${classes[keyStyleHandler()]}`}
+      onClick={() => keyboardClickHandlerProps(userInput)}
+    >
+      <span>{keyIconProps}</span>
     </div>
   );
 };

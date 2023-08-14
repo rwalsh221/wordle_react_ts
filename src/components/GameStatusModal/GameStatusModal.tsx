@@ -47,7 +47,11 @@ const GameStatusModal = ({
   return (
     <div className={`${classes.game_status_modal} ${classes[content.style]}`}>
       <p>{modalContentHandler().message}</p>
-      <button type="button" onClick={setGameRunningProps} autoFocus>
+      <button
+        type="button"
+        onClick={setGameRunningProps}
+        aria-label="start game"
+      >
         START
       </button>
     </div>
