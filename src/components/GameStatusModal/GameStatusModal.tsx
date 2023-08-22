@@ -44,9 +44,26 @@ const GameStatusModal = ({
 
   const content = modalContentHandler();
 
+  const setGameRunningHandler = async () => {
+    try {
+      const getWinningWord = await fetch('./src/json/words.json');
+      if (!getWinningWord.ok) {
+        throw new Error();
+      }
+      const winningWordArr: string[] = (await getWinningWord.json()) as [];
+
+      const winningWord =
+        winningWordArr[Math.floor(Math.random() * winningWordArr.length)];
+    } catch (error) {
+      console.error(error);
+    }
+
+    // dispatch winningword as payload
+  };
+
   return (
     <div className={`${classes.game_status_modal} ${classes[content.style]}`}>
-      <p>{modalContentHandler().message}</p>
+      <p>{content.message}</p>
       <button
         type="button"
         onClick={setGameRunningProps}

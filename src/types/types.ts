@@ -7,7 +7,7 @@ export type GameStateStatus =
 // export type Test = boolean;
 
 export type UserInputType = {
-  input: string;
+  userInput: string;
   inWinningWord: boolean | null;
   inCorrectPlace: boolean | null;
 };
@@ -23,4 +23,21 @@ export type KeyboardControllerType = {
   inCorrectPlace: string[];
   inWinningWord: string[];
   notInWinningWord: string[];
+};
+
+export type RowType = {
+  status: GameStateStatus;
+  input: UserInputType[];
+};
+
+export type GameRunningType = {
+  status: 'win' | 'lose' | 'init' | 'running';
+  running: boolean;
+};
+
+export type GameStateX = {
+  winningWord: string;
+  inputState: GameStateType;
+  keyboardController: KeyboardControllerType;
+  gameStatus: GameRunningType;
 };

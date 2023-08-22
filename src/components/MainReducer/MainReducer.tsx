@@ -5,13 +5,14 @@ import Keyboard from '../Keyboard/Keyboard';
 import GameStatusModal from '../GameStatusModal/GameStatusModal';
 import _ from 'lodash';
 import { copyState } from '../../helpers/helpers';
-import userInputReducer from './Main.reducer';
+import userInputReducer from '../Main/Main.reducer';
 
 import type {
   GameStateType,
   GameStateStatus,
   UserInputType,
   KeyboardControllerType,
+  GameStateX,
 } from '../../types/types';
 
 type RowType = {
@@ -32,9 +33,44 @@ type GameRunningType = {
 const Main = () => {
   // TODO: DEEP COPY STATE OBJ
 
-  const test = { a: 's', b: 2 };
-  const test2 = _.cloneDeep(test);
-
+  const gameStatex: GameStateX = {
+    winningWord: '',
+    inputState: {
+      row1: {
+        status: 'active',
+        input: [],
+      },
+      row2: {
+        status: 'inactive',
+        input: [],
+      },
+      row3: {
+        status: 'inactive',
+        input: [],
+      },
+      row4: {
+        status: 'inactive',
+        input: [],
+      },
+      row5: {
+        status: 'inactive',
+        input: [],
+      },
+      row6: {
+        status: 'inactive',
+        input: [],
+      },
+    },
+    keyboardController: {
+      inCorrectPlace: [],
+      inWinningWord: [],
+      notInWinningWord: [],
+    },
+    gameStatus: {
+      status: 'init',
+      running: false,
+    },
+  };
   // STATE START
 
   const [gameRunning, setGameRunning] = useState<GameRunningType>({
@@ -99,49 +135,19 @@ const Main = () => {
     return win;
   };
 
-  const resetGameHandler = () => {
-    const gameStateCopy = { ...gameState };
-    const gameStateCopyKeys = Object.keys(gameStateCopy);
-    gameStateCopyKeys.forEach((el, index) => {
-      while (gameStateCopy[el].input.length) {
-        gameStateCopy[el].input.pop();
-      }
-      if (index === 0) {
-        gameStateCopy[el].status = 'active';
-      } else {
-        gameStateCopy[el].status = 'inactive';
-      }
-    });
-  };
+  // const getWinningWordHandler = async () => {
+  //   try {
+  //     const getWinningWord = await fetch('./src/json/words.json');
+  //     if (!getWinningWord.ok) {
+  //       throw new Error();
+  //     }
+  //     const winningWordArr: string[] = (await getWinningWord.json()) as [];
 
-  const clearKeyboardHandler = () => {
-    // https://stackoverflow.com/questions/69479640/typescript-error-no-index-signature-with-a-parameter-of-type-string-was-found  Array<keyof KeyboardControllerType>
-    const keyboardControllerCopy = { ...keyboardController };
-    const keyboardControllerCopyKeys = Object.keys(
-      keyboardControllerCopy
-    ) as Array<keyof KeyboardControllerType>;
-
-    keyboardControllerCopyKeys.forEach((el) => {
-      while (keyboardControllerCopy[el].length) {
-        keyboardControllerCopy[el].pop();
-      }
-    });
-    setKeyboardController({ ...keyboardControllerCopy });
-  };
-
-  const getWinningWordHandler = async () => {
-    try {
-      const getWinningWord = await fetch('./src/json/words.json');
-      if (!getWinningWord.ok) {
-        throw new Error();
-      }
-      const winningWordArr: string[] = (await getWinningWord.json()) as [];
-
-      return winningWordArr[Math.floor(Math.random() * winningWordArr.length)];
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     return winningWordArr[Math.floor(Math.random() * winningWordArr.length)];
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const validateKeyPressedHandler = (
     keyPressed: string | null,
@@ -179,7 +185,7 @@ const Main = () => {
 
     if (input.length < 5) {
       input.push({
-        userInput: keyPressed,
+        input: keyPressed,
         inWinningWord: null,
         inCorrectPlace: null,
       });
@@ -188,10 +194,10 @@ const Main = () => {
     return false;
   };
 
-  // const [gameStateRed, gameStateDispatch] = useReducer(
-  //   userInputReducer,
-  //   gameState
-  // );
+  const [gameStateRed, gameStateDispatch] = useReducer(
+    userInputReducer,
+    gameStatex
+  );
 
   const userInputHandler = useCallback(
     (userInput: string) => {
@@ -219,7 +225,7 @@ const Main = () => {
 
         // CHECK IF USER INPUT IS IN CORRECT PLACE IN WINNING WORD
         for (let i = winningWordArr.length - 1; i >= 0; i--) {
-          if (winningWordArr[i] === gameStateInputCopy[i].userInput) {
+          if (winningWordArr[i] === gameStateInputCopy[i].input) {
             keyboardControllerCopy.inCorrectPlace.push(winningWordArr[i]);
 
             gameStateInputCopy[i].inWinningWord = false;
@@ -234,12 +240,12 @@ const Main = () => {
 
         // CHECK IF USER INPUT IS IN WINNING WORD BUT NOT CORRECT PLACE
         gameStateInputCopy.forEach((el) => {
-          if (winningWordArr.indexOf(el.userInput) !== -1) {
+          if (winningWordArr.indexOf(el.input) !== -1) {
             el.inWinningWord = true;
-            winningWordArr.splice(winningWordArr.indexOf(el.userInput), 1);
-            keyboardControllerCopy.inWinningWord.push(el.userInput);
+            winningWordArr.splice(winningWordArr.indexOf(el.input), 1);
+            keyboardControllerCopy.inWinningWord.push(el.input);
           } else {
-            keyboardControllerCopy.notInWinningWord.push(el.userInput);
+            keyboardControllerCopy.notInWinningWord.push(el.input);
             el.inWinningWord = false;
           }
         });
@@ -271,9 +277,6 @@ const Main = () => {
           keyPressed === inputKey.enter &&
           gameStateCopy[key].input.length === 5
         ) {
-          //
-          // userInputReducer(gameState);
-          //
           checkWordHandler(gameStateCopy[key], keyboardControllerCopy);
 
           gameStateCopy[key].status = 'inactive';
@@ -335,21 +338,6 @@ const Main = () => {
   // HANDLES INPUT FROM UI KEYBOARD
   const UIKeyboardInputHandler = (UIKeyboardClick: string) => {
     return userInputHandler(UIKeyboardClick);
-  };
-
-  const gameRunningHandler = async () => {
-    const gameRunningStateCopy = { ...gameRunning };
-    gameRunningStateCopy.running = true;
-    if (
-      gameRunningStateCopy.status === 'win' ||
-      gameRunningStateCopy.status === 'lose'
-    ) {
-      resetGameHandler();
-      clearKeyboardHandler();
-    }
-    const winningWord = await getWinningWordHandler();
-    setWinningWord(winningWord!);
-    setGameRunning({ ...gameRunningStateCopy });
   };
 
   useEffect(() => {

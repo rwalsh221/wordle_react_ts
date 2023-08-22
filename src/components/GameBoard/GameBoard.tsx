@@ -42,7 +42,7 @@ const GameBoard = ({ gameStateProps }: GameBoardPropTypes) => {
           gameSquares.push(
             <GameSquare
               key={`${key}${i}`}
-              rowProps={gameStateProps[key].input[i].input}
+              rowProps={gameStateProps[key].input[i].userInput}
               styleProps="input__init"
             />
           );
@@ -50,7 +50,7 @@ const GameBoard = ({ gameStateProps }: GameBoardPropTypes) => {
           gameSquares.push(
             <GameSquare
               key={`${key}${i}`}
-              rowProps={gameStateProps[key].input[i].input}
+              rowProps={gameStateProps[key].input[i].userInput}
               styleProps={gameSquareStyleHandler(gameStateProps[key].input[i])}
             />
           );
