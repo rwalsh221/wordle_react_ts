@@ -41,3 +41,8 @@ export type GameStateX = {
   keyboardController: KeyboardControllerType;
   gameStatus: GameRunningType;
 };
+
+export type InputKey = {
+  backSpace: 'Backspace';
+  enter: 'Enter';
+};

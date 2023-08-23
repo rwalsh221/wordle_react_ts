@@ -2,17 +2,17 @@ import React from 'react';
 import classes from './GameBoard.module.css';
 import GameSquare from './GameSquare/GameSquare';
 
-import { GameStateType, UserInputType } from '../../types/types';
+import { GameStateType, UserInputType, GameStateX } from '../../types/types';
 
 type GameBoardPropTypes = {
-  gameStateProps: GameStateType;
+  gameStateProps: GameStateX;
   winningWordProps: string;
 };
 
 const GameBoard = ({ gameStateProps }: GameBoardPropTypes) => {
   const renderGameSquare = () => {
     const gameSquares: React.ReactElement[] = [];
-    const userInputPropsKeys = Object.keys(gameStateProps);
+    const userInputPropsKeys = Object.keys(gameStateProps.inputState);
 
     const gameSquareStyleHandler = (inputObj: UserInputType) => {
       let style: string;
@@ -36,22 +36,24 @@ const GameBoard = ({ gameStateProps }: GameBoardPropTypes) => {
     userInputPropsKeys.forEach((key) => {
       for (let i = 0; i < 5; i++) {
         if (
-          gameStateProps[key].input[i] &&
-          gameStateProps[key].status === 'active'
+          gameStateProps.inputState[key].input[i] &&
+          gameStateProps.inputState[key].status === 'active'
         ) {
           gameSquares.push(
             <GameSquare
               key={`${key}${i}`}
-              rowProps={gameStateProps[key].input[i].userInput}
+              rowProps={gameStateProps.inputState[key].input[i].userInput}
               styleProps="input__init"
             />
           );
-        } else if (gameStateProps[key].input[i]) {
+        } else if (gameStateProps.inputState[key].input[i]) {
           gameSquares.push(
             <GameSquare
               key={`${key}${i}`}
-              rowProps={gameStateProps[key].input[i].userInput}
-              styleProps={gameSquareStyleHandler(gameStateProps[key].input[i])}
+              rowProps={gameStateProps.inputState[key].input[i].userInput}
+              styleProps={gameSquareStyleHandler(
+                gameStateProps.inputState[key].input[i]
+              )}
             />
           );
         } else {

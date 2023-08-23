@@ -27,3 +27,25 @@ export const copyState = (stateInput: object, keys = false) => {
   const test5 = _.cloneDeep(test4);
   return stateCopy;
 };
+
+export const validateKeyPressedHandler = (
+  keyPressed: string | null,
+  keyPressedCode: string
+) => {
+  let validate = true;
+  if (keyPressed === null) {
+    validate = false;
+    return validate;
+  }
+  if (keyPressedCode[0] !== 'K') {
+    validate = false;
+  }
+  if (keyPressedCode === 'Backspace') {
+    validate = true;
+  }
+  if (keyPressedCode === 'Enter') {
+    validate = true;
+  }
+
+  return validate;
+};

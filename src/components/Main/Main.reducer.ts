@@ -4,12 +4,20 @@ import type {
   KeyboardControllerType,
   RowType,
   GameStateX,
+  InputKey,
 } from '../../types/types';
+
+const INPUT_KEY: InputKey = {
+  backSpace: 'Backspace',
+  enter: 'Enter',
+};
 
 const ACTIONS = {
   gameStart: 'game-start',
   checkWin: 'check-win',
   endGame: 'end-game',
+  deleteInput: 'delete-input',
+  addInput: 'add-input',
 } as const;
 
 type Actions = {
@@ -18,7 +26,36 @@ type Actions = {
     winningWord?: string;
     activeRowKey?: string;
     activeRowIndex?: number;
+    keyPressed?: string;
+    nextRowKey?: string;
   };
+};
+
+const pushInputHandler = (
+  stateCopy: GameStateX,
+  keyPressed: string | null,
+  inputKey: InputKey,
+  activeRowKey: string
+) => {
+  const activeRow = stateCopy.inputState[activeRowKey].input;
+
+  if (keyPressed === null || activeRow.length >= 5) {
+    return false;
+  }
+  if (keyPressed === inputKey.backSpace || keyPressed === inputKey.enter) {
+    return false;
+  }
+
+  activeRow.push({
+    userInput: keyPressed,
+    inWinningWord: null,
+    inCorrectPlace: null,
+  });
+  return true;
+};
+
+const deleteHandler = (stateCopy: GameStateX, activeRowKey: string) => {
+  stateCopy.inputState[activeRowKey].input.pop();
 };
 
 const endGameHandler = (stateCopy: GameStateX, winLose: 'win' | 'lose') => {
@@ -62,16 +99,26 @@ const checkWordHandler = (
   stateCopy: GameStateX,
   activeRowKey: string,
   activeRowIndex: number,
-  winningWord: string
+  nextRowKey: string
 ) => {
-  const winningWordArr = winningWord.split('');
-  const activeRowInput = stateCopy.inputState[activeRowKey].input;
+  // console.log(winningWord);
+  const winningWordArr = stateCopy.winningWord.split('');
+  const activeRowInput = [...stateCopy.inputState[activeRowKey].input];
   const keyboardController = stateCopy.keyboardController;
   const inputStateLength = Object.keys(stateCopy.inputState).length;
-
+  console.log(activeRowInput[0]);
+  console.log(winningWordArr);
   // CHECK IF USER INPUT IS IN CORRECT PLACE IN WINNING WORD
   for (let i = winningWordArr.length - 1; i >= 0; i--) {
+    console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+    console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+    console.log(winningWordArr);
+    console.log(winningWordArr[i], activeRowInput[i].userInput);
+    console.log(winningWordArr.length);
+    console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+
     if (winningWordArr[i] === activeRowInput[i].userInput) {
+      console.log(true);
       keyboardController.inCorrectPlace.push(winningWordArr[i]);
 
       activeRowInput[i].inWinningWord = false;
@@ -82,23 +129,27 @@ const checkWordHandler = (
     } else {
       activeRowInput[i].inCorrectPlace = false;
     }
-
-    // CHECK IF USER INPUT IS IN WINNING WORD BUT NOT CORRECT PLACE
-    activeRowInput.forEach((el) => {
-      if (winningWordArr.indexOf(el.userInput) !== -1) {
-        el.inWinningWord = true;
-        winningWordArr.splice(winningWordArr.indexOf(el.userInput), 1);
-        keyboardController.inWinningWord.push(el.userInput);
-      } else {
-        keyboardController.notInWinningWord.push(el.userInput);
-        el.inWinningWord = false;
-      }
-    });
-
-    stateCopy.inputState[activeRowKey].status = 'inactive';
-    if (activeRowIndex !== inputStateLength - 1) {
-      stateCopy.inputState[activeRowIndex + 1].status = 'active';
+    console.log(activeRowInput[0]);
+  }
+  // CHECK IF USER INPUT IS IN WINNING WORD BUT NOT CORRECT PLACE
+  activeRowInput.forEach((el) => {
+    if (winningWordArr.indexOf(el.userInput) !== -1) {
+      el.inWinningWord = true;
+      winningWordArr.splice(winningWordArr.indexOf(el.userInput), 1);
+      keyboardController.inWinningWord.push(el.userInput);
+      console.log(el);
+    } else {
+      console.log('ISISIS FALSE');
+      console.log(el.userInput);
+      keyboardController.notInWinningWord.push(el.userInput);
+      el.inWinningWord = false;
     }
+  });
+
+  stateCopy.inputState[activeRowKey].status = 'inactive';
+  // console.log(stateCopy.winningWord);
+  if (activeRowIndex !== inputStateLength - 1) {
+    stateCopy.inputState[nextRowKey].status = 'active';
   }
 };
 
@@ -158,14 +209,30 @@ const userInputReducer = (state: GameStateX, action: Actions): GameStateX => {
         stateCopy,
         action.payload.activeRowKey!,
         action.payload.activeRowIndex!,
-        action.payload.winningWord!
+        action.payload.nextRowKey!
       );
       checkWinHandler(
         stateCopy,
         action.payload.activeRowKey!,
         action.payload.activeRowIndex!
       );
+      console.log(stateCopy);
       return { ...stateCopy };
+    case ACTIONS.deleteInput:
+      deleteHandler(stateCopy, action.payload.activeRowKey!);
+      return { ...stateCopy };
+    case ACTIONS.addInput:
+      if (
+        pushInputHandler(
+          stateCopy,
+          action.payload.keyPressed!,
+          INPUT_KEY,
+          action.payload.activeRowKey!
+        )
+      ) {
+        return { ...stateCopy };
+      }
+      return state;
     default:
       return state;
   }
