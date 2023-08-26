@@ -40,9 +40,9 @@ const MainReducer = () => {
       },
     },
     keyboardController: {
-      inCorrectPlace: [],
-      inWinningWord: [],
-      notInWinningWord: [],
+      inCorrectPlace: new Set(),
+      inWinningWord: new Set(),
+      notInWinningWord: new Set(),
     },
     gameStatus: {
       status: 'init',

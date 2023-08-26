@@ -25,6 +25,12 @@ export type KeyboardControllerType = {
   notInWinningWord: string[];
 };
 
+export type KeyboardControllerTypex = {
+  inCorrectPlace: Set<string>;
+  inWinningWord: Set<string>;
+  notInWinningWord: Set<string>;
+};
+
 export type RowType = {
   status: GameStateStatus;
   input: UserInputType[];
@@ -38,7 +44,7 @@ export type GameRunningType = {
 export type GameStateX = {
   winningWord: string;
   inputState: GameStateType;
-  keyboardController: KeyboardControllerType;
+  keyboardController: KeyboardControllerTypex;
   gameStatus: GameRunningType;
 };
 

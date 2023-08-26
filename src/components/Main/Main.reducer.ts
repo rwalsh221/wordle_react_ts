@@ -119,7 +119,7 @@ const checkWordHandler = (
 
     if (winningWordArr[i] === activeRowInput[i].userInput) {
       console.log(true);
-      keyboardController.inCorrectPlace.push(winningWordArr[i]);
+      keyboardController.inCorrectPlace.add(winningWordArr[i]);
 
       activeRowInput[i].inWinningWord = false;
       activeRowInput[i].inCorrectPlace = true;
@@ -136,12 +136,12 @@ const checkWordHandler = (
     if (winningWordArr.indexOf(el.userInput) !== -1) {
       el.inWinningWord = true;
       winningWordArr.splice(winningWordArr.indexOf(el.userInput), 1);
-      keyboardController.inWinningWord.push(el.userInput);
+      keyboardController.inWinningWord.add(el.userInput);
       console.log(el);
     } else {
       console.log('ISISIS FALSE');
       console.log(el.userInput);
-      keyboardController.notInWinningWord.push(el.userInput);
+      keyboardController.notInWinningWord.add(el.userInput);
       el.inWinningWord = false;
     }
   });
@@ -175,9 +175,7 @@ const clearKeyboardHandler = (stateCopy: GameStateX) => {
   ) as Array<keyof KeyboardControllerType>;
 
   keyboardControllerKeys.forEach((el) => {
-    while (stateCopy.keyboardController[el].length) {
-      stateCopy.keyboardController[el].pop();
-    }
+    stateCopy.keyboardController[el].clear();
   });
   // setKeyboardController({ ...keyboardControllerCopy });
 };

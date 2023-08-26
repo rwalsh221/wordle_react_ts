@@ -1,10 +1,13 @@
 import classes from './Key.module.css';
 
-import type { KeyboardControllerType } from '../../../types/types';
+import type {
+  KeyboardControllerType,
+  KeyboardControllerTypex,
+} from '../../../types/types';
 
 type KeyProps = {
   keyIconProps: string;
-  keyboardControllerProps: KeyboardControllerType;
+  keyboardControllerProps: KeyboardControllerTypex;
   keyboardClickHandlerProps: (arg0: string) => void;
   keyboardClickInputProps?: string;
 };
@@ -16,15 +19,11 @@ const Key = ({
   keyboardClickInputProps,
 }: KeyProps) => {
   const keyStyleHandler = () => {
-    if (keyboardControllerProps.inCorrectPlace.indexOf(keyIconProps) !== -1) {
+    if (keyboardControllerProps.inCorrectPlace.has(keyIconProps)) {
       return 'input__in_correct_place';
-    } else if (
-      keyboardControllerProps.inWinningWord.indexOf(keyIconProps) !== -1
-    ) {
+    } else if (keyboardControllerProps.inWinningWord.has(keyIconProps)) {
       return 'input__in_word';
-    } else if (
-      keyboardControllerProps.notInWinningWord.indexOf(keyIconProps) !== -1
-    ) {
+    } else if (keyboardControllerProps.notInWinningWord.has(keyIconProps)) {
       return 'input__not_in_word';
     } else {
       return 'init';
