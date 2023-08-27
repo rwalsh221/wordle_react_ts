@@ -91,8 +91,6 @@ const checkWinHandler = (
   if (activeRowIndex === inputStateLength - 1) {
     endGameHandler(stateCopy, 'lose');
   }
-
-  // return win;
 };
 
 const checkWordHandler = (
@@ -101,22 +99,13 @@ const checkWordHandler = (
   activeRowIndex: number,
   nextRowKey: string
 ) => {
-  // console.log(winningWord);
   const winningWordArr = stateCopy.winningWord.split('');
   const activeRowInput = [...stateCopy.inputState[activeRowKey].input];
   const keyboardController = stateCopy.keyboardController;
   const inputStateLength = Object.keys(stateCopy.inputState).length;
-  console.log(activeRowInput[0]);
-  console.log(winningWordArr);
+
   // CHECK IF USER INPUT IS IN CORRECT PLACE IN WINNING WORD
   for (let i = winningWordArr.length - 1; i >= 0; i--) {
-    console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
-    console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
-    console.log(winningWordArr);
-    console.log(winningWordArr[i], activeRowInput[i].userInput);
-    console.log(winningWordArr.length);
-    console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
-
     if (winningWordArr[i] === activeRowInput[i].userInput) {
       console.log(true);
       keyboardController.inCorrectPlace.add(winningWordArr[i]);
@@ -129,7 +118,6 @@ const checkWordHandler = (
     } else {
       activeRowInput[i].inCorrectPlace = false;
     }
-    console.log(activeRowInput[0]);
   }
   // CHECK IF USER INPUT IS IN WINNING WORD BUT NOT CORRECT PLACE
   activeRowInput.forEach((el) => {
@@ -137,17 +125,14 @@ const checkWordHandler = (
       el.inWinningWord = true;
       winningWordArr.splice(winningWordArr.indexOf(el.userInput), 1);
       keyboardController.inWinningWord.add(el.userInput);
-      console.log(el);
     } else {
-      console.log('ISISIS FALSE');
-      console.log(el.userInput);
       keyboardController.notInWinningWord.add(el.userInput);
       el.inWinningWord = false;
     }
   });
 
   stateCopy.inputState[activeRowKey].status = 'inactive';
-  // console.log(stateCopy.winningWord);
+
   if (activeRowIndex !== inputStateLength - 1) {
     stateCopy.inputState[nextRowKey].status = 'active';
   }
@@ -177,7 +162,6 @@ const clearKeyboardHandler = (stateCopy: GameStateX) => {
   keyboardControllerKeys.forEach((el) => {
     stateCopy.keyboardController[el].clear();
   });
-  // setKeyboardController({ ...keyboardControllerCopy });
 };
 
 const gameRunningHandler = (stateCopy: GameStateX, winningWord: string) => {
@@ -189,10 +173,8 @@ const gameRunningHandler = (stateCopy: GameStateX, winningWord: string) => {
     resetGameHandler(stateCopy);
     clearKeyboardHandler(stateCopy);
   }
-  // PASS AS PAYLOAD
-  // const winningWord = await getWinningWordHandler();
+
   stateCopy.winningWord = winningWord;
-  // setGameRunning({ ...gameRunningStateCopy });
 };
 
 const userInputReducer = (state: GameStateX, action: Actions): GameStateX => {
@@ -214,7 +196,7 @@ const userInputReducer = (state: GameStateX, action: Actions): GameStateX => {
         action.payload.activeRowKey!,
         action.payload.activeRowIndex!
       );
-      console.log(stateCopy);
+
       return { ...stateCopy };
     case ACTIONS.deleteInput:
       deleteHandler(stateCopy, action.payload.activeRowKey!);

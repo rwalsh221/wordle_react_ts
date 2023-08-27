@@ -3,52 +3,19 @@ import classes from './MainReducer.module.css';
 import GameBoard from '../GameBoard/GameBoard';
 import Keyboard from '../Keyboard/Keyboard';
 import GameStatusModalx from '../GameStatusModal/GameStatusModalx';
+import GameState from '../../helpers/classes/GameState';
 
 import { copyState, validateKeyPressedHandler } from '../../helpers/helpers';
 import userInputReducer from '../Main/Main.reducer';
 
-import type { GameStateX, InputKey } from '../../types/types';
+import type { InputKey } from '../../types/types';
+
+// TODO: REPLACE WITH MAIN. AND TYPES OF X
 
 const MainReducer = () => {
   // STATE AND REDUCER
-  const gameStateInit: GameStateX = {
-    winningWord: '',
-    inputState: {
-      row1: {
-        status: 'active',
-        input: [],
-      },
-      row2: {
-        status: 'inactive',
-        input: [],
-      },
-      row3: {
-        status: 'inactive',
-        input: [],
-      },
-      row4: {
-        status: 'inactive',
-        input: [],
-      },
-      row5: {
-        status: 'inactive',
-        input: [],
-      },
-      row6: {
-        status: 'inactive',
-        input: [],
-      },
-    },
-    keyboardController: {
-      inCorrectPlace: new Set(),
-      inWinningWord: new Set(),
-      notInWinningWord: new Set(),
-    },
-    gameStatus: {
-      status: 'init',
-      running: false,
-    },
-  };
+
+  const gameStateInit = new GameState();
 
   const [gameState, gameStateDispatch] = useReducer(
     userInputReducer,
