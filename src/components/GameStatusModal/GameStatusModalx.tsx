@@ -1,7 +1,14 @@
 import classes from './GameStatusModal.module.css';
 
+type Actions = {
+  type: 'game-start';
+  payload: {
+    winningWord: string;
+  };
+};
+
 type GameStatusModalPropTypes = {
-  dispatchGameRunningProps: (arg1: string) => void;
+  dispatchGameRunningProps: React.Dispatch<Actions>;
   gameStatusProps: 'win' | 'lose' | 'init' | 'running';
   winningWordProps: string;
 };
