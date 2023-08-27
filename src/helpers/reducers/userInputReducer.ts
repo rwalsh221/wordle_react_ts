@@ -1,9 +1,7 @@
 import _ from 'lodash';
 import type {
-  GameStateType,
   KeyboardControllerType,
-  RowType,
-  GameStateX,
+  GameStateType,
   InputKey,
 } from '../../types/types';
 
@@ -32,7 +30,7 @@ type Actions = {
 };
 
 const pushInputHandler = (
-  stateCopy: GameStateX,
+  stateCopy: GameStateType,
   keyPressed: string | null,
   inputKey: InputKey,
   activeRowKey: string
@@ -54,11 +52,11 @@ const pushInputHandler = (
   return true;
 };
 
-const deleteHandler = (stateCopy: GameStateX, activeRowKey: string) => {
+const deleteHandler = (stateCopy: GameStateType, activeRowKey: string) => {
   stateCopy.inputState[activeRowKey].input.pop();
 };
 
-const endGameHandler = (stateCopy: GameStateX, winLose: 'win' | 'lose') => {
+const endGameHandler = (stateCopy: GameStateType, winLose: 'win' | 'lose') => {
   const gameRunning = stateCopy.gameStatus;
 
   gameRunning.running = false;
@@ -67,7 +65,7 @@ const endGameHandler = (stateCopy: GameStateX, winLose: 'win' | 'lose') => {
 };
 
 const checkWinHandler = (
-  stateCopy: GameStateX,
+  stateCopy: GameStateType,
   activeRowKey: string,
   activeRowIndex: number
 ) => {
@@ -94,7 +92,7 @@ const checkWinHandler = (
 };
 
 const checkWordHandler = (
-  stateCopy: GameStateX,
+  stateCopy: GameStateType,
   activeRowKey: string,
   activeRowIndex: number,
   nextRowKey: string
@@ -107,7 +105,6 @@ const checkWordHandler = (
   // CHECK IF USER INPUT IS IN CORRECT PLACE IN WINNING WORD
   for (let i = winningWordArr.length - 1; i >= 0; i--) {
     if (winningWordArr[i] === activeRowInput[i].userInput) {
-      console.log(true);
       keyboardController.inCorrectPlace.add(winningWordArr[i]);
 
       activeRowInput[i].inWinningWord = false;
@@ -138,7 +135,7 @@ const checkWordHandler = (
   }
 };
 
-const resetGameHandler = (stateCopy: GameStateX) => {
+const resetGameHandler = (stateCopy: GameStateType) => {
   const inputStateKeys = Object.keys(stateCopy.inputState);
   inputStateKeys.forEach((el, index) => {
     while (stateCopy.inputState[el].input.length) {
@@ -152,7 +149,7 @@ const resetGameHandler = (stateCopy: GameStateX) => {
   });
 };
 
-const clearKeyboardHandler = (stateCopy: GameStateX) => {
+const clearKeyboardHandler = (stateCopy: GameStateType) => {
   // https://stackoverflow.com/questions/69479640/typescript-error-no-index-signature-with-a-parameter-of-type-string-was-found  Array<keyof KeyboardControllerType>
 
   const keyboardControllerKeys = Object.keys(
@@ -164,7 +161,7 @@ const clearKeyboardHandler = (stateCopy: GameStateX) => {
   });
 };
 
-const gameRunningHandler = (stateCopy: GameStateX, winningWord: string) => {
+const gameRunningHandler = (stateCopy: GameStateType, winningWord: string) => {
   stateCopy.gameStatus.running = true;
   if (
     stateCopy.gameStatus.status === 'win' ||
@@ -177,7 +174,10 @@ const gameRunningHandler = (stateCopy: GameStateX, winningWord: string) => {
   stateCopy.winningWord = winningWord;
 };
 
-const userInputReducer = (state: GameStateX, action: Actions): GameStateX => {
+const userInputReducer = (
+  state: GameStateType,
+  action: Actions
+): GameStateType => {
   const stateCopy = _.cloneDeep(state);
 
   switch (action.type) {

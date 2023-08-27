@@ -8,7 +8,6 @@
   transform: translate(-50%, -50%);
   border-radius: 10px;
   border: 2px solid var(--color-red-dark);
-  /* display: none; */
 }
 
 .game_status_modal_animation {
@@ -34,8 +33,6 @@
   border-radius: 10px;
   border: 2px solid var(--color-green-dark);
   margin: 5rem auto;
-
-  /* overflow: hidden; */
 }
 
 .game_status_modal button:focus {

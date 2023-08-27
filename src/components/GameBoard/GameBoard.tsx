@@ -2,10 +2,10 @@ import React from 'react';
 import classes from './GameBoard.module.css';
 import GameSquare from './GameSquare/GameSquare';
 
-import { GameStateType, UserInputType, GameStateX } from '../../types/types';
+import { GameStateType, UserInputType } from '../../types/types';
 
 type GameBoardPropTypes = {
-  gameStateProps: GameStateX;
+  gameStateProps: GameStateType;
   winningWordProps: string;
 };
 

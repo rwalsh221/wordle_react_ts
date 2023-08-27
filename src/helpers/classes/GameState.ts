@@ -1,15 +1,15 @@
 import type {
-  GameRunningType,
+  GameStatusType,
   GameStateType,
-  GameStateX,
-  KeyboardControllerTypex,
+  KeyboardControllerType,
+  inputStateType,
 } from '../../types/types';
 
-class GameState implements GameStateX {
+class GameState implements GameStateType {
   public winningWord: string;
-  public inputState: GameStateType;
-  public keyboardController: KeyboardControllerTypex;
-  public gameStatus: GameRunningType;
+  public inputState: inputStateType;
+  public keyboardController: KeyboardControllerType;
+  public gameStatus: GameStatusType;
 
   constructor() {
     this.winningWord = '';

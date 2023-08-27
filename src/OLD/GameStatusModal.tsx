@@ -1,20 +1,13 @@
 import classes from './GameStatusModal.module.css';
 
-type Actions = {
-  type: 'game-start';
-  payload: {
-    winningWord: string;
-  };
-};
-
 type GameStatusModalPropTypes = {
-  dispatchGameRunningProps: React.Dispatch<Actions>;
+  setGameRunningProps: () => Promise<void>;
   gameStatusProps: 'win' | 'lose' | 'init' | 'running';
   winningWordProps: string;
 };
 
-const GameStatusModalx = ({
-  dispatchGameRunningProps,
+const GameStatusModal = ({
+  setGameRunningProps,
   gameStatusProps,
   winningWordProps,
 }: GameStatusModalPropTypes) => {
@@ -61,12 +54,6 @@ const GameStatusModalx = ({
 
       const winningWord =
         winningWordArr[Math.floor(Math.random() * winningWordArr.length)];
-      dispatchGameRunningProps({
-        type: 'game-start',
-        payload: {
-          winningWord: winningWord,
-        },
-      });
     } catch (error) {
       console.error(error);
     }
@@ -79,7 +66,7 @@ const GameStatusModalx = ({
       <p>{content.message}</p>
       <button
         type="button"
-        onClick={setGameRunningHandler}
+        onClick={setGameRunningProps}
         aria-label="start game"
       >
         START
@@ -88,4 +75,4 @@ const GameStatusModalx = ({
   );
 };
 
-export default GameStatusModalx;
+export default GameStatusModal;

@@ -1,13 +1,10 @@
 import classes from './Keyboard.module.css';
 import Key from './Key/Key';
 
-import type {
-  KeyboardControllerType,
-  KeyboardControllerTypex,
-} from '../../types/types';
+import type { KeyboardControllerType } from '../../types/types';
 
 type KeyboardPropTypes = {
-  keyboardControllerProps: KeyboardControllerTypex;
+  keyboardControllerProps: KeyboardControllerType;
   keyboardClickHandlerProps: (arg0: string) => void;
 };
 

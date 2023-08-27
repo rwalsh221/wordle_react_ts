@@ -12,20 +12,20 @@ export type UserInputType = {
   inCorrectPlace: boolean | null;
 };
 
-export type GameStateType = {
+export type inputStateType = {
   [key: string]: {
     status: GameStateStatus;
     input: UserInputType[];
   };
 };
 
-export type KeyboardControllerType = {
+export type KeyboardControllerTypeOLD = {
   inCorrectPlace: string[];
   inWinningWord: string[];
   notInWinningWord: string[];
 };
 
-export type KeyboardControllerTypex = {
+export type KeyboardControllerType = {
   inCorrectPlace: Set<string>;
   inWinningWord: Set<string>;
   notInWinningWord: Set<string>;
@@ -36,16 +36,16 @@ export type RowType = {
   input: UserInputType[];
 };
 
-export type GameRunningType = {
+export type GameStatusType = {
   status: 'win' | 'lose' | 'init' | 'running';
   running: boolean;
 };
 
-export type GameStateX = {
+export type GameStateType = {
   winningWord: string;
-  inputState: GameStateType;
-  keyboardController: KeyboardControllerTypex;
-  gameStatus: GameRunningType;
+  inputState: inputStateType;
+  keyboardController: KeyboardControllerType;
+  gameStatus: GameStatusType;
 };
 
 export type InputKey = {
