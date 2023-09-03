@@ -1,3 +1,6 @@
+/* eslint-disable */
+//@ts-nocheck
+
 import classes from './GameStatusModal.module.css';
 
 type GameStatusModalPropTypes = {

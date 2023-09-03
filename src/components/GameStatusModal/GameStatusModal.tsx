@@ -53,7 +53,7 @@ const GameStatusModal = ({
 
   const setGameRunningHandler = async () => {
     try {
-      const getWinningWord = await fetch('./src/json/words.json');
+      const getWinningWord = await fetch('/json/words.json');
       if (!getWinningWord.ok) {
         throw new Error();
       }
